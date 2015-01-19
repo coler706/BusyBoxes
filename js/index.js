@@ -481,14 +481,14 @@ function liveCell(xyz, color, state) {
                 cell_obj.threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( color ) );
                 cell_obj.threejs.overdraw = true;
                 scene.addObject( cell_obj.threejs );
-                console.log("look here: ", cell_obj, gThreeInUse, gThreeUnused);
+                //console.log("look here: ", cell_obj, gThreeInUse, gThreeUnused);
             }
             else if(state === 1){
                 cell_obj.state = 1;
                 cell_obj.threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( color ) );
                 cell_obj.threejs.overdraw = true;
                 scene.addObject( cell_obj.threejs );
-                console.log("should be grey--look here: ", cell_obj, gThreeInUse, gThreeUnused);
+                //console.log("should be grey--look here: ", cell_obj, gThreeInUse, gThreeUnused);
             }
 			// deal with color somehow
                     ///////
@@ -1192,10 +1192,10 @@ function onDocumentKeyDown( event ) {
                 killCell(cursor);
                 console.log("3rd state ThreeUnused after killing: ", gThreeUnused)
                 //mainGrid.put(cursor[0],cursor[1],cursor[2], 0);
-                updateHash(); 
-                gInitialHash = lasthash;
-                gInitialFrame = frame;
-                render();
+                // updateHash(); 
+                // gInitialHash = lasthash;
+                // gInitialFrame = frame;
+                // render();
                 liveCell(cursor, 0xffff00, -1 );
                 mainGrid.put(cursor[0],cursor[1],cursor[2], -1);
             }
