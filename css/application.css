@@ -9,6 +9,38 @@ body {
     overflow-y:hidden;
 }
 
+#sidebar{
+    position:fixed;
+    top:0;
+    bottom:10;
+    height: 100%;
+    width: 300px;
+    overflow: scroll;
+}
+.rule-dropdown{
+    width: 300px;
+    background: #e6e6e6;
+    position:relative;
+    top:0;
+    bottom:0;
+    overflow-y:scroll;
+}
+.config-dropdown{
+    width: 300px;
+    background: #e6e6e6;
+    position:relative;
+    top:0;
+    bottom:0;
+    overflow-y:scroll;
+}
+#dashboard{
+    color: #333;
+    font-weight: bold;
+}
+#dashboard span{
+    color: #696969;
+    font-weight: normal;
+}
 .bannerButtons {
     opacity: 0.7;
 }
