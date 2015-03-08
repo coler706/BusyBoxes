@@ -28,6 +28,7 @@
       <title>BUSY BOXES</title>
       <meta charset="utf-8">
       <link rel="stylesheet" type="text/css" href="css/application.css"></link>
+      <link rel="stylesheet" type="text/css" href="css/sidebar.css"></link>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" ></script>
       <script src="js/bootstrap.min.js"></script>
       <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
@@ -56,7 +57,13 @@
           <button tabindex=6 onclick="moodal_choice('OK')" style="border:ridge;border-color:black;border-style:double;">OK</button>
         </div>
 
-        <div id="sidebar" style="position:absolute;font-size:large">
+
+
+
+        <div id="sidebar">
+          <div id="sidebar_scrollable_container">
+
+            <!-- DASHBOARD -->
             <div id="dashboard">
                 Generation:
                 <span id="generation"></span>
@@ -77,22 +84,16 @@
                 <span id="cursorpos"></span>
                 <br/>
                 Hash:
-                <span id="showhash" style="font-size:smaller"></span>
+                <span id="showhash"></span>
                 <br/>
                 <span id="showinfo"></span>
                 <span id="duplicates"></span>
             </div>
 
-            <!-- drop down explorations -->
-<!--             <div class="btn-group">
-              <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Rule Set <span class="caret"></span></button>
-              <ul class="dropdown-menu">
-                  <li><a href="?rule=bbRule">Basic</a></li>
-                  <li><a href="?rule=golRule">Game of Life</a></li>
-                  <li><a href="?rule=gol3DRule">Game of Life 3D</a></li>
-              </ul>
-            </div> -->
-            <div data-toggle="rule_dropdown" class="rule-dropdown-open">Rule Set <span class="caret"></span></div>
+
+
+            <!-- RULE SET DROP DOWN -->
+            <div data-toggle="rule_dropdown" class="rule-dropdown-open dropdown-open">Rule Set <span class="caret"></span></div>
             <ul class="rule-dropdown" style="display:none;">
                 <li><a href="?rule=bbRule">Basic</a></li>
                 <li><a href="?rule=golRule">Game of Life</a></li>
@@ -100,7 +101,9 @@
             </ul>
 
             
-            <div type="button" data-toggle="config_dropdown" class="config-dropdown-open">Configurations <span class="caret"></span></div>
+
+            <!-- CONFIGURATION DROP DOWN -->
+            <div type="button" data-toggle="config_dropdown" class="config-dropdown-open dropdown-open">Configurations <span class="caret"></span></div>
             <ul class="config-dropdown" style="display:none;">
 <li><a href="#" onclick="setRule('?rule=golRule')" id="x"> choose a rule</a></li>
               <li><a href="#" id="introHash" onclick="selectHash('PeciXwDuTA0', this)">Intro</a></li>
@@ -275,17 +278,21 @@
         <script type="text/javascript" src="js/moodal.js"></script>
         <script type="text/javascript" src="js/Grid.js"></script>
         <script type="text/javascript" src="js/Rule.js"></script>
-        <script type="text/javascript" src="js/golRule.js"></script>
-        <script type="text/javascript" src="js/gol3DRule.js"></script>
-        <script type="text/javascript" src="js/bbRule.js"></script>
-        <script type="text/javascript" src="js/bb3Rule.js"></script>
-        <script type="text/javascript" src="js/bb3StateRule.js"></script>
+
+        <script type="text/javascript" src="js/rules/golRule.js"></script>
+        <script type="text/javascript" src="js/rules/gol3DRule.js"></script>
+        <script type="text/javascript" src="js/rules/bbRule.js"></script>
+        <script type="text/javascript" src="js/rules/bb3Rule.js"></script>
+        <script type="text/javascript" src="js/rules/bb3StateRule.js"></script>
+        
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/bindings.js"></script>
         
         <div style="display:none">
             <img src="tracking.jpg"></img>
         </div>
+
+      </div>  
     </div>
     </body>
 </html>
