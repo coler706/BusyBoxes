@@ -1,23 +1,31 @@
 /*
- * Dan and Rafale's new three state rule. Right now this is only implemeneted as 2-d rule.
+ * A new three state rule
  */
 vector = function(x, y, z){
 	return {x:x, y:y, z:z};
-}
+};
 
 add = function(oldVector, x, y, z) {
 	return vector(oldVector.x + x, oldVector.y + y, oldVector.z + z);
-}
+};
+
+addVectors = function(vector1, vector2) {
+	return vector(vector1.x + vector2.x, vector1.y + vector2.y, vector1.z + vector2.z);
+};
 
 get = function(grid, getLocation) {
 	return grid.get(getLocation.x, getLocation.y, getLocation.z);
-}
+};
 
 XOR = function(a,b) {
   return ( a || b ) && !( a && b );
-}
+};
 
-getLocationToGetFrom = function(grid, x,y,z) {
+rule2D3state = function(grid, x,y,z, frame){
+	// if ((frame+x+y+z) % 2 === 0)
+		// return;
+	if ((x + y + z & 1) != (frame & 1)) return; 								// only process if field parity is correct
+
 	var rotatorFound = false;
 	var rotatorLocation;
 	var deltaFromMeToRotatorLocation;
@@ -67,26 +75,17 @@ getLocationToGetFrom = function(grid, x,y,z) {
 	
 	rotatorState = get(grid, rotatorLocation);
 	if (rotatorState === 1)
-		return add(vector(
-			deltaFromMeToRotatorLocation.z,
-			0,
-			-deltaFromMeToRotatorLocation.x),
-			rotatorLocation.x,rotatorLocation.y,rotatorLocation.z);
+		return get(grid,
+			add(vector(
+				deltaFromMeToRotatorLocation.z,
+				0,
+				-deltaFromMeToRotatorLocation.x),
+				rotatorLocation.x,rotatorLocation.y,rotatorLocation.z));
 	if (rotatorState === -1)
-		return add(vector(
-			-deltaFromMeToRotatorLocation.z,
-			0,
-			deltaFromMeToRotatorLocation.x),
-			rotatorLocation.x,rotatorLocation.y,rotatorLocation.z);
-}
-
-rule3state = function(grid, x,y,z, frame){
-	// if ((frame+x+y+z) % 2 === 0)
-		// return;
-	if ((x + y + z & 1) != (frame & 1)) return; 								// only process if field parity is correct
-
-	var locationToGetFrom = getLocationToGetFrom(grid, x,y,z);
-
-	if (locationToGetFrom)
-		return get(grid, locationToGetFrom);
-}
+		return get(grid,
+			add(vector(
+				-deltaFromMeToRotatorLocation.z,
+				0,
+				deltaFromMeToRotatorLocation.x),
+				rotatorLocation.x,rotatorLocation.y,rotatorLocation.z));
+};
