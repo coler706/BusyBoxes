@@ -30,6 +30,7 @@
       <meta charset="utf-8">
       <link rel="stylesheet" type="text/css" href="css/application.css"></link>
       <link rel="stylesheet" type="text/css" href="css/sidebar.css"></link>
+      <link rel="stylesheet" type="text/css" href="css/PopUp.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" ></script>
       <script src="js/bootstrap.min.js"></script>
       <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
@@ -248,9 +249,6 @@
             
         <div style="display:none">
             <div id="banner">
-                <span style="background-color: #fff; opacity:0.5; border-bottom: 1px solid #ddd; padding: 8px 10px; font-size:medium">
-                    <b>click & drag to rotate view | scroll to zoom | arrows move cursor; U & D for up/down | ENTER to create/delete | S to step</b>
-                </span>
                 <div>
                     </p><button class="bannerButtons btn btn-default" onclick="toggleRunning()">RUN/STOP</button>
                     <button class="bannerButtons btn btn-default" onclick="fastSlow()">FAST/SLOW</button>
@@ -262,18 +260,17 @@
                     <button class="bannerButtons btn btn-default" onclick="clearGrid()">CLEAR</button>
                     <button class="bannerButtons btn btn-default" onclick="update()">UPDATE</button>
                     <button class="bannerButtons btn btn-default" onclick="reset()">RESET</button>
+                    <button class="bannerButtons btn btn-default" data-toggle="modal" data-target="#controls">?</button>
                 </div>
-                <a href="faq.html" target="_blank" style="font-size:larger">faq</a>
-                |
-                <a href="https://github.com/danx0r/BusyBoxes" target="_blank" style="font-size:larger">source</a>
+
             </div>
-
-
-            
-
         </div>
+
+
+
         <div id="canvas-container">
         </div>
+
         <script type="text/javascript" src="js/ThreeCanvas.js"></script>
         <script type="text/javascript" src="js/Cube.js"></script>
         <script type="text/javascript" src="js/Plane.js"></script>
@@ -300,6 +297,76 @@
 
       </div>  
     </div>
+
+
+    <div id="controls" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">LyfeCraft Controls</h4>
+          </div>
+          <div class="modal-body">
+            
+            <table>
+
+              <tr class="icons">
+                <td>Click & drag to rotate view</td>
+                <td></td>
+                <td><img id="clickdrag" src="click.jpg"></td>
+              </tr>
+
+              <tr class="icons">
+                <td>Scroll to zoom </td>
+                <td></td>
+                <td><img id="scrolltozoom" src="scroll.png"></td>
+              </tr>
+
+              <tr class="icons">
+                <td>Move cursor up (3D)</td>
+                <td></td>
+                <td><img id="directionu" src="imgres.png"></td>
+              </tr>
+
+              <tr class="icons">
+                <td>Move cursor down (3D)</td>
+                <td> </td>
+                <td ><img id="directionu" src="Dkey.jpg"></td>
+              </tr>
+
+              <tr class="icons" >
+                <td> To move LyfeCraft Cursor (transparent box) use:</td>
+                <td></td>
+                <td ><img id="ekey" src="arrow_keys-01.jpg"></td>
+              </tr>
+
+              <tr class="icons" >
+                <td> To create a LyfeCraft Box press:</td>
+                <td></td>
+                <td ><img id="ekey" src="space-bar.jpg"></td>
+              </tr>
+
+              <tr class="icons" >
+                <td> To run the configuration:</td>
+                <td></td>
+                <td ><img id="ekey" src="Ekey.png"></td>
+              </tr>
+
+              
+
+            </table>
+          </div>
+          <div class="modal-footer">
+            <a href="faq.html" target="_blank" style="font-size:larger">faq</a>
+            |
+            <a href="https://github.com/danx0r/BusyBoxes" target="_blank" style="font-size:larger">source</a>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <!-- END OF MODAL -->
+
     </body>
 </html>
 
