@@ -505,6 +505,7 @@ function liveCell(xyz, color, state) {
                 cell_obj.threejs.material[ 0 ].color.setHex(color ^ 0xFF000000)
                 cell_obj.threejs.overdraw = true;
 
+
                 if (DEBUG2) console.log("look here: ", cell_obj, gThreeInUse, gThreeUnused);
 
             }
@@ -512,6 +513,7 @@ function liveCell(xyz, color, state) {
                 cell_obj.state = 1;
                 cell_obj.threejs.material[ 0 ].color.setHex(color ^ 0xFF000000)
                 cell_obj.threejs.overdraw = true;
+
 
                 if (DEBUG2) console.log("should be grey--look here: ", cell_obj, gThreeInUse, gThreeUnused);
 
@@ -898,6 +900,7 @@ function onDocumentKeyDown( event ) {
             else if (STATES == 3 && obj.state === 1){
                 killCell(cursor);
 
+
                 updateHash(); 
                 gInitialHash = lasthash;
                 gInitialFrame = frame;
@@ -908,6 +911,7 @@ function onDocumentKeyDown( event ) {
                 else {
                 	liveCell(cursor, NEG_EVEN, -1 );
                 }
+
 
                 mainGrid.put(cursor[0],cursor[1],cursor[2], -1);
             }
