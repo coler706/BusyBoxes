@@ -37,7 +37,7 @@
 
     </head>
 
-    <body>
+    <body class="light">
       <div id="big_chris_container">
         <div id="moodal_background" style="position:absolute;width:100%;height:100%;background-color:black;z-index:100;opacity:0.2;display:none">
         </div>
@@ -96,11 +96,15 @@
 
 
             <!-- RULE SET DROP DOWN -->
-            <div data-toggle="rule_dropdown" class="rule-dropdown-open dropdown-open">Rule Set <span class="caret"></span></div>
+            <div data-toggle="rule_dropdown" class="rule-dropdown-open dropdown-open">
+              Rule Set <span class="caret"></span>
+            </div>
             <ul class="rule-dropdown" style="display:none;">
                 <li><a href="?rule=bbRule">Basic</a></li>
                 <li><a href="?rule=golRule">Game of Life</a></li>
                 <li><a href="?rule=gol3DRule">Game of Life 3D</a></li>
+                <li><a href="?rule=rule2D3state">2D 3-state rule</a></li>
+                <li><a href="?rule=rule3D3state">3D 3-state rule</a></li>
             </ul>
 
             
@@ -260,6 +264,7 @@
                     <button class="bannerButtons btn btn-default" onclick="clearGrid()">CLEAR</button>
                     <button class="bannerButtons btn btn-default" onclick="update()">UPDATE</button>
                     <button class="bannerButtons btn btn-default" onclick="reset()">RESET</button>
+                    <!-- <button class="bannerButtons btn btn-default toggle-background">!</button> -->
                     <button class="bannerButtons btn btn-default" data-toggle="modal" data-target="#controls">?</button>
                 </div>
 
@@ -279,14 +284,18 @@
         <script type="text/javascript" src="js/Grid.js"></script>
         <script type="text/javascript" src="js/Rule.js"></script>
 
-
+        <!-- GOL rules -->
         <script type="text/javascript" src="js/rules/golRule.js"></script>
         <script type="text/javascript" src="js/rules/gol3DRule.js"></script>
+        
+        <!-- Busy boxes rules -->
         <script type="text/javascript" src="js/rules/bbRule.js"></script>
         <script type="text/javascript" src="js/rules/bb3Rule.js"></script>
         <script type="text/javascript" src="js/rules/bb3StateRule.js"></script>
 
-        <script type="text/javascript" src="js/rule3state.js"></script>
+        <!-- new 3 state rules -->
+        <script type="text/javascript" src="js/rules/rule3D3state.js"></script>
+        <script type="text/javascript" src="js/rules/rule2D3state.js"></script>
         
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/bindings.js"></script>
@@ -313,13 +322,13 @@
               <tr class="icons">
                 <td>Click & drag to rotate view</td>
                 <td></td>
-                <td><img id="clickdrag" src="click.jpg"></td>
+                <td><img id="clickdrag" src="Click.jpg"></td>
               </tr>
 
               <tr class="icons">
                 <td>Scroll to zoom </td>
                 <td></td>
-                <td><img id="scrolltozoom" src="scroll.png"></td>
+                <td><img id="scrolltozoom" src="Scroll.png"></td>
               </tr>
 
               <tr class="icons">
