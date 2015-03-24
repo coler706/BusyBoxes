@@ -7,6 +7,16 @@ $(".config-dropdown-open").click(function(){
   $(this).toggleClass("dropdown-active");
 });
 
+
+$(window).load(function(){
+
+  if (localStorage.getItem("instructions") != "true"){
+    $('#controls').modal('show');
+    localStorage.setItem("instructions", true)
+  }
+}
+
 $('button.toggle-background').on('click', function () {
     $(this).toggleClass('light space');
+
 });
