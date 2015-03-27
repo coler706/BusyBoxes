@@ -298,3 +298,10 @@ ul > li:hover > #cssmenu {
 #cssmenu > ul > .has-sub:hover > ul {
 display: block;
 }
+.configs{
+    overflow: scroll;
+    max-height: 500px;
+}
+html{
+  max-height: 100%;
+}
