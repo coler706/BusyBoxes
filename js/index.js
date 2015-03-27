@@ -766,7 +766,7 @@ function onDocumentKeyDown( event ) {
     }
 //document.getElementById("debug").innerHTML = ''+event.keyCode;
 //if(DEBUG) console.log("key:", event.keyCode);
-    if (event.shiftKey || event.ctrlKey || event.altKey || event.altGraphKey) return;
+    if (event.altKey || event.altGraphKey) return;
     
     // THIS is the navigation interface
     // We should think about redesigning
@@ -807,14 +807,14 @@ function onDocumentKeyDown( event ) {
             setBrushPosition(cursor);
             render(); 
             break;
-        case 33:                           // Page Up
+        case 16:                           // shift
             event.preventDefault();
             cursor[1]++;
             clampCursor();
             setBrushPosition(cursor);
             render(); 
             break;
-        case 34:                           // D
+        case 17:                           // ctrl
             event.preventDefault();
             cursor[1]--;
             clampCursor();
