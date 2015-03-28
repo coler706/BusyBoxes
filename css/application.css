@@ -1,3 +1,5 @@
+@import "primer/scss/primer.scss";
+@import "primer/css/primer";
 body {
     font-family: Monospace;
     font-size: 12px;
@@ -29,4 +31,8 @@ body {
 }
 .goHash:hover {
     background-color:white;
+}
+#leftLinks .menu-item{
+    height:30px;
+    font-size: 15px;
 }
