@@ -66,6 +66,6 @@ gol3DRule = function(grid, x,y,z){
 	if(grid.get(x,y,z)){
 		if(nabes < 4 || nabes > 7) return 0;//was 2 or 3
 	} else {
-		if(nabes == 8 || nabes==10||nabes==7) return 1;
+		if(nabes == 8 || nabes==6||nabes==7) return 1;
 	}
 }
