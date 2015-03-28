@@ -92,7 +92,7 @@ projector, plane, cube, linesMaterial,
 color = 0,colors = [ 0xDF1F1F, 0xDFAF1F, 0x80DF1F, 0x1FDF50, 0x1FDFDF, 0x1F4FDF, 0x7F1FDF, 0xDF1FAF, 0xEFEFEF, 0x303030 ],
 // minusColor = 0, minusColors = [0x4e9258,0xffff00 ],
 ray, brush, objectHovered,
-isMouseDown = false, onMouseDownPosition,
+isMouseDown = false,isShiftDown = false, onMouseDownPosition,
 radius = 2000, theta = 0, onMouseDownTheta = 45, phi = 60, onMouseDownPhi = 60;
 randWidth = 4, randCount = 33, randRatio = 0.5;
 
@@ -307,21 +307,21 @@ bugg = 1000;
     compassRose1.position.y = 0;
     compassRose1.position.z = compassRoseOffsetFromCenter;
     compassRose1.overdraw = true;
-    scene.addObject( compassRose1 );
+    //scene.addObject( compassRose1 );
 
     var compassRose2 = new THREE.Mesh( new Cube(10, 100, 10), new THREE.MeshColorFillMaterial( 0x00FF00, compassRoseAlpha) );
     compassRose2.position.x = -compassRoseOffsetFromCenter;
     compassRose2.position.y = 0;
     compassRose2.position.z = compassRoseOffsetFromCenter;
     compassRose2.overdraw = true;
-    scene.addObject( compassRose2 );
+    //scene.addObject( compassRose2 );
 
     var compassRose3 = new THREE.Mesh( new Cube(100, 10, 10), new THREE.MeshColorFillMaterial( 0x0000FF, compassRoseAlpha) );
     compassRose3.position.x = -compassRoseOffsetFromCenter;
     compassRose3.position.y = 0;
     compassRose3.position.z = compassRoseOffsetFromCenter;
     compassRose3.overdraw = true;
-    scene.addObject( compassRose3 );
+    //scene.addObject( compassRose3 );
 
 
     // this is the cursor that shows where you are going to create a cube
@@ -363,6 +363,7 @@ bugg = 1000;
     
     //standard dom stuff--so that our keyboard controls work
     document.addEventListener( 'keydown', onDocumentKeyDown, false );
+	document.addEventListener( 'keyup', onDocumentKeyUp, false );
     document.addEventListener( 'mousemove', onDocumentMouseMove, false );
     document.addEventListener( 'mousedown', onDocumentMouseDown, false );
     document.addEventListener( 'mouseup', onDocumentMouseUp, false );
@@ -813,6 +814,7 @@ function onDocumentKeyDown( event ) {
             clampCursor();
             setBrushPosition(cursor);
             render(); 
+			isShiftDown=true;
             break;
         case 17:                           // ctrl
             event.preventDefault();
@@ -941,7 +943,9 @@ function onDocumentKeyDown( event ) {
             break;
     }
 }
-
+function onDocumentKeyUp( event ) {
+	isShiftDown=false;
+}
 
 
 function adjustCamera(){
@@ -998,8 +1002,8 @@ function onDocumentMouseUp( event ) {
 function onDocumentMouseWheel( event ) {
     if (gMoodalInEffect) return;
     event.preventDefault();
-if (event.detail) {							/// ugh, dumb Firefox hack
-if (event.detail > 0) {
+	if (event.detail) {							/// ugh, dumb Firefox hack
+	if (event.detail > 0) {
 radius += 120;
 }
 else {

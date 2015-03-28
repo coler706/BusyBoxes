@@ -32,6 +32,8 @@
         <script src="js/bootstrap.min.js"></script>
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="css/SideNavBar.css">
+        <link rel="stylesheet" type="text/css" href="css/topbar.css">
+        <link rel="stylesheet" type="text/css" href="css/PopUp.css">
     </head>
     <body >
         <div id="big_chris_container">
@@ -57,6 +59,12 @@
         </div>
         <div id="leftLinks" style="position:absolute;font-size:large">
             <div style="opacity:0.7">
+            <nav class="menu">
+  <a class="menu-item selected" href="#">Account</a>
+  <a class="menu-item" href="#">Profile</a>
+  <a class="menu-item" href="#">Emails</a>
+  <a class="menu-item" href="#">Notifications</a>
+</nav>
                 Generation:
                 <span id="generation"></span>
                 <br/>
@@ -193,8 +201,88 @@
                 <a href="https://github.com/danx0r/BusyBoxes" target="_blank" style="font-size:larger">source</a>
             </div>
         </div>
-        
-        <script type="text/javascript" src="js/ThreeCanvas.js"></script>
+        <div id="my_popup">
+
+
+
+    <!-- Add an optional button to close the popup -->
+    <!-- <button class="my_popup_close">Close</button> -->
+
+  <div id="fadeandscale" class="my_popup_close well popup_content" data-popup-initialized="true" aria-hidden="false" role="dialog" aria-labelledby="open_10981174" style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s; -webkit-transition: all 0.3s; text-align: left; position: relative; vertical-align: middle;" tabindex="-1"
+
+    <div class="InfoBox">
+    <!-- <button id="closeme" class="my_popup_close fadeandscale_close btn btn_default ">&#10006;</button> -->
+    <h1 class="popUpText"><b>LyfeCraft Controls</b></h1>
+                <hr />
+    <table>
+    <tr>
+  <th class="howtoplay">Directions</th>
+  <th></th>
+ <th class="whattopress">Keys</th>
+    </tr>
+
+    <tr class="icons">
+         <td>Click & drag to rotate view</td>
+         <td></td>
+         <td><img id="clickdrag" src="click.jpg"></td>
+    </tr>
+
+    <tr class="icons">
+        <td>Scroll to zoom </td>
+        <td></td>
+        <td><img id="scrolltozoom" src="scroll.png"></td>
+    </tr>
+
+    <tr class="icons">
+        <td>To move transparent box up press:</td>
+        <td></td>
+        <td><img id="directionu" src="imgres.png"></td>
+    </tr>
+
+    <tr class="icons">
+        <td>To move transparent box down press:</td>
+        <td> </td>
+        <td ><img id="directionu" src="Dkey.jpg"></td>
+    </tr>
+
+    <tr class="icons" >
+        <td> To create a LyfeCraft Box press:</td>
+        <td></td>
+        <td ><img id="ekey" src="Ekey.png"></td>
+        </tr>
+        <tr>
+      
+        </tr>
+
+        <tr class="icons" >
+        <td> To move LyfeCraft Cursor (transparent box) use:</td>
+        <td></td>
+        <td ><img id="ekey" src="arrow_keys-01.jpg"></td>
+        </tr>
+        <tr>
+      
+        </tr>
+
+        </table>
+         <h6 class="popUpText"> Click any where to close this box </h6>
+         <!-- Include jQuery -->
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+
+  <!-- Include jQuery Popup Overlay -->
+  <script src="http://vast-engineering.github.io/jquery-popup-overlay/jquery.popupoverlay.js"></script>
+         <script>
+    $(document).ready(function() {
+
+      // Initialize the plugin
+      $('#fadeandscale').popup({
+    transition: 'all 0.3s'
+    });
+     $('#my_popup').popup('show');
+
+    });
+  </script>
+
+  <script type="text/javascript" src="js/ThreeCanvas.js"></script>
         <script type="text/javascript" src="js/Cube.js"></script>
         <script type="text/javascript" src="js/Plane.js"></script>
         <script type="text/javascript" src="js/encdec.js"></script>
@@ -208,6 +296,7 @@
         <script type="text/javascript" src="js/bb3StateRule.js"></script>
         <script type="text/javascript" src="js/rule3state.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
+        
         
         <div style="display:none">
             <img src="tracking.jpg"></img>
