@@ -1,14 +1,8 @@
-@import "primer/scss/primer.scss";
-@import "primer/css/primer";
+
 body {
-    font-family: Monospace;
-    font-size: 12px;
-    background-color: #f0f0f0;
+    
     margin: 0px;
     overflow-x: hidden;
-}
-#big_chris_container{
-    overflow-y:hidden;
 }
 
 .bannerButtons {
@@ -16,9 +10,9 @@ body {
 }
 .bannerButtons:hover {
     opacity: 1.0;
-    border-color:black;
+    #border-color:black;
 }
-.goHash {
+.gsoHash {
     font-family:monospace;
     font-size:large;
     #color:blue;
@@ -35,4 +29,14 @@ body {
 #leftLinks .menu-item{
     height:30px;
     font-size: 15px;
+}
+#my_popup{
+    display:none;
+}
+.btn-group button{
+    margin:-0px;
+    width:99px;
+}
+.btn-group.config{
+    margin:-5px;
 }

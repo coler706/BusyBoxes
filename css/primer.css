@@ -1501,51 +1501,51 @@ p.explain {
   width: 100%;
   text-align: center; }
 
-.btn-group {
+.btn-groupp {
   display: inline-block;
   vertical-align: middle; }
-  .btn-group:before {
+  .btn-groupp:before {
     display: table;
     content: ""; }
-  .btn-group:after {
+  .btn-groupp:after {
     display: table;
     clear: both;
     content: ""; }
-  .btn-group .btn {
+  .btn-groupp .btn {
     position: relative;
     float: left; }
-    .btn-group .btn:not(:first-child):not(:last-child) {
+    .btn-groupp .btn:not(:first-child):not(:last-child) {
       border-radius: 0; }
-    .btn-group .btn:first-child {
+    .btn-groupp .btn:first-child {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0; }
-    .btn-group .btn:last-child {
+    .btn-groupp .btn:last-child {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0; }
-    .btn-group .btn:hover, .btn-group .btn:focus, .btn-group .btn:active, .btn-group .btn.selected {
+    .btn-groupp .btn:hover, .btn-group .btn:focus, .btn-group .btn:active, .btn-group .btn.selected {
       z-index: 2; }
-  .btn-group .btn + .btn {
+  .btn-groupp .btn + .btn {
     margin-left: -1px;
     box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.2); }
-    .btn-group .btn + .btn:hover {
+    .btn-groupp .btn + .btn:hover {
       box-shadow: none; }
-    .btn-group .btn + .btn:active, .btn-group .btn + .btn.selected {
+    .btn-groupp .btn + .btn:active, .btn-group .btn + .btn.selected {
       box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.15); }
-  .btn-group .button_to + .button_to {
+  .btn-groupp .button_to + .button_to {
     margin-left: -1px; }
-  .btn-group .button_to {
+  .btn-groupp .button_to {
     float: left; }
-    .btn-group .button_to .btn {
+    .btn-groupp .button_to .btn {
       border-radius: 0; }
-    .btn-group .button_to:first-child .btn {
+    .btn-groupp .button_to:first-child .btn {
       border-top-left-radius: 3px;
       border-bottom-left-radius: 3px; }
-    .btn-group .button_to:last-child .btn {
+    .btn-groupp .button_to:last-child .btn {
       border-top-right-radius: 3px;
       border-bottom-right-radius: 3px; }
 
-.btn-group + .btn-group,
-.btn-group + .btn {
+.btn-groupp + .btn-groupp,
+.btn-groupp + .btn {
   margin-left: 5px; }
 
 .btn-link {

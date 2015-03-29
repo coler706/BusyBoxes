@@ -35,6 +35,7 @@
         <link rel="stylesheet" type="text/css" href="css/SideNavBar.css">
         <link rel="stylesheet" type="text/css" href="css/topbar.css">
         <link rel="stylesheet" type="text/css" href="css/PopUp.css">
+        <link rel="stylesheet" type="text/css" href="css/application.css"></link>
         
     </head>
     <body >
@@ -66,23 +67,17 @@
                         <span class="menu-item">Generation:
                             <span id="generation"></span></span>
                             <span class="menu-item">Phase:
-                                <span id="showphase"></span></span>
-                                <span class="menu-item">Direction:
-                                    <span id="direction"></span></span>
-                                    <span class="menu-item">Speed:
-                                        <span id="showspeed">fast</span></span>
-                                        <span class="menu-item">Cells:
-                                                <span id="cellcount"></span></span>
-                                            <span class="menu-item">Cursor:
-                                                <span id="cursorpos"></span></span>
-                                                <span class="menu-item">Hash:
+                            <span id="showphase"></span></span>
+                            <span class="menu-item">Direction:
+                            <span id="direction"></span></span>
+                            <span class="menu-item">Speed: <span id="showspeed">fast</span></span>
+                            <span class="menu-item">Cells:
+                            <span id="cellcount"></span></span>
+                            <span class="menu-item">Cursor:
+                            <span id="cursorpos"></span></span>
+                            <span class="menu-item">Hash:
                                                 <span id="showhash" style="font-size:smaller"></span></span>
-                                                </nav>
-                                                <span id="showinfo"></span>
-                                                <span id="duplicates"></span>
-                                            </div>
-                                            <!-- drop down explorations -->
-                                            <div class="btn-group">
+                                                <div class="btn-group">
                                                 <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Rule Set <span class="caret"></span></button>
                                                 <ul class="dropdown-menu">
                                                     <li><a href="?rule=bbRule">Basic</a></li>
@@ -93,8 +88,8 @@
                                                     <li><a href="?rule=rule3state">New 3-state rule</a></li>
                                                 </ul>
                                             </div>
-                                            <div class="btn-group">
-                                                <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Configurations <span class="caret"></span></button>
+                                            <div class="btn-group config">
+                                                <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Presets <span class="caret"></span></button>
                                                 <ul class="dropdown-menu configs">
                                                     <li><a href="#" onclick="setRule('?rule=golRule')" id="x"> choose a rule</a></li>
                                                     <li><a href="#" id="introHash" onclick="selectHash('PeciXwDuTA0', this)">Intro</a></li>
@@ -165,6 +160,11 @@
                                                     <!--file:///C:/Users/cannon/Downloads/BusyBoxes-master/BusyBoxes-master/index.html?rule=bbRule&hash=kgCQL0CggzYKTBAoJwdAcF2CBRARwQK6BAoJMWBQRwE0/-->
                                                 </ul>
                                             </div>
+                                                </nav>
+                                                <span id="showinfo"></span>
+                                                <span id="duplicates"></span>
+                                            </div>
+                                            <!-- drop down explorations -->
                                             
                                             
                                             <div style="display:none">
@@ -173,8 +173,8 @@
                                                         <b>click & drag to rotate view | scroll to zoom | arrows move cursor; U & D for up/down | ENTER to create/delete | S to step</b>
                                                     </span>
                                                     <div>
-                                                    </p><button class="bannerButtons" onclick="toggleRunning()">RUN/STOP</button>
-                                                    <button class="bannerButtons" onclick="fastSlow()">FAST/SLOW</button>
+                                                    </p><button class="bannerButtons" onclick="toggleRunning()" type="button">RUN/STOP</button>
+                                                    <button class="bannerButtons" onclick="fastSlow()" type="button">FAST/SLOW</button>
                                                     <button class="bannerButtons" onclick="isRunning = true; mainLoop(); isRunning = false;">STEP</button>
                                                     <button class="bannerButtons" onclick="reverseDirection()">DIRECTION</button>
                                                     <button class="bannerButtons" onclick="randomCells(12, -2, 1)">RANDOM</button>
@@ -195,7 +195,7 @@
                                             <div id="fadeandscale" class="my_popup_close well popup_content" data-popup-initialized="true" aria-hidden="false" role="dialog" aria-labelledby="open_10981174" style="opacity: 1; visibility: visible; display: inline-block; outline: none; transition: all 0.3s; -webkit-transition: all 0.3s; text-align: left; position: relative; vertical-align: middle;" tabindex="-1"
                                                 <div class="InfoBox">
                                                     <!-- <button id="closeme" class="my_popup_close fadeandscale_close btn btn_default ">&#10006;</button> -->
-                                                    <h1 class="popUpText"><b>LyfeCraft Controls</b></h1>
+                                                    <h1 class="popUpText"><b>BusyBox Controls</b></h1>
                                                     <hr />
                                                     <table>
                                                         <tr>
@@ -248,10 +248,13 @@
                                                     <script>
                                                     $(document).ready(function() {
                                                     // Initialize the plugin
-                                                    $('#fadeandscale').popup({
-                                                    transition: 'all 0.3s'
-                                                    });
-                                                    $('#my_popup').popup('show');
+                                                    function popup(){
+                                                        $('#fadeandscale').popup({
+                                                            transition: 'all 0.3s'
+                                                        });
+                                                        $('#my_popup').popup('show');
+                                                    }
+                                                    popup();
                                                     });
                                                     </script>
                                                     <script type="text/javascript" src="js/ThreeCanvas.js"></script>
