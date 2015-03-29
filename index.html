@@ -170,7 +170,7 @@
                                             <div style="display:none">
                                                 <div id="banner">
                                                     <span style="background-color: #fff; opacity:0.5; border-bottom: 1px solid #ddd; padding: 8px 10px; font-size:medium">
-                                                        <b>click & drag to rotate view | scroll to zoom | arrows move cursor; U & D for up/down | ENTER to create/delete | S to step</b>
+                                                        <b>click & drag to rotate view | scroll to zoom | arrows move cursor; SHIFT & CTRL for up/down | ENTER to create/delete | S to step</b>
                                                     </span>
                                                     <div>
                                                     </p><button class="bannerButtons" onclick="toggleRunning()" type="button">RUN/STOP</button>
@@ -183,6 +183,7 @@
                                                     <button class="bannerButtons" onclick="clearGrid()">CLEAR</button>
                                                     <button class="bannerButtons" onclick="update()">UPDATE</button>
                                                     <button class="bannerButtons" onclick="reset()">RESET</button>
+                                                    <button class="bannerButtons" onclick="popup()">HELP</button>
                                                 </div>
                                                 <a href="faq.html" target="_blank" style="font-size:larger">faq</a>
                                                 |
@@ -226,7 +227,7 @@
                                                         <tr class="icons" >
                                                             <td> To create a LyfeCraft Box press:</td>
                                                             <td></td>
-                                                            <td ><img id="ekey" src="Ekey.png"></td>
+                                                            <td ><img id="ekey" src="SpaceKey.png"></td>
                                                         </tr>
                                                         <tr>
                                                             
@@ -246,14 +247,14 @@
                                                     <!-- Include jQuery Popup Overlay -->
                                                     <script src="http://vast-engineering.github.io/jquery-popup-overlay/jquery.popupoverlay.js"></script>
                                                     <script>
-                                                    $(document).ready(function() {
-                                                    // Initialize the plugin
                                                     function popup(){
                                                         $('#fadeandscale').popup({
                                                             transition: 'all 0.3s'
                                                         });
                                                         $('#my_popup').popup('show');
                                                     }
+                                                    $(document).ready(function() {
+                                                    // Initialize the plugin
                                                     popup();
                                                     });
                                                     </script>
