@@ -1100,143 +1100,39 @@ function refreshUrl(hash) {
     }
 }
 function buildFromHash(hash) {
-    var version = false;
-    if (hash) {
-        version = "Y"; 
-    }
-    else {
-        version = window.location.hash.substr(1, 1);
-        hash = window.location.hash.substr(3);
-    }
-    var phase = hash.substr(hash.length-1, hash.length);
-    frame = parseInt(phase);
-    if ('' + frame == "NaN") {
-        frame = 0;
-    }
-    else {
-        hash = hash.substr( 0, hash.length - 1 );
-    }
-    if ( version == "A" ) {
-        if (DEBUG) console.log("glider: Version A");
-        var current = { x: 0, y: 0, z: 0, c: 0 }
-        var data = decode( hash );
-        var i = 0, l = data.length;
-        while ( i < l ) {
-            var code = data[ i ++ ].toString( 2 );
-            if ( code.charAt( 1 ) == "1" ) current.x += data[ i ++ ] - 32;
-            if ( code.charAt( 2 ) == "1" ) current.y += data[ i ++ ] - 32;
-            if ( code.charAt( 3 ) == "1" ) current.z += data[ i ++ ] - 32;
-            if ( code.charAt( 4 ) == "1" ) current.c += data[ i ++ ] - 32;
-            if ( code.charAt( 0 ) == "1" ) {
-                // var voxel = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ current.c ] ) );
-                //   //voxel.position.x = current.x * 50 + 25;
-                //   //voxel.position.y = current.y * 50 + 25;
-                //   //voxel.position.z = current.z * 50 + 25;
-                //   setObjPosition(voxel, [current.x, current.y, current.z]);
-                //   voxel.overdraw = true;
-                //   scene.addObject( voxel );
-                //   putGrid(voxel, [current.x, current.y, current.z])
-                //   
-                var special_xyz = [current.x, current.y, current.z];
-                // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
-                // var cell_obj = new CellObj(threejs, 1 );
-                var cell_obj = liveCell(special_xyz, DEFAULT_COLOR);
-                mainGrid.put(special_xyz[0],special_xyz[1],special_xyz[2])
-
-                //voxel.position.x = cur[0] * 50 + 25;
-                //voxel.position.y = cur[1] * 50 + 25;
-                //voxel.position.z = cur[2] * 50 + 25;
-                var overdraw_bool = true;
-                cell_obj.threejs.overdraw = true;
-                
-            }
+    var data = hash;
+    data = encdec_decode(data);
+    console.log("DEBUG length of key_p:", data.shift())
+    var cur = [0, 0, 0];
+    var x = 0;
+    var delta, sign;
+    while (x < data.length) {
+        for (var i = 0; i < 3; i++) {
+            delta = data[x++];
+            cur[i] += delta;
         }
-    } else {
-        if (version == "X") {
-            if (DEBUG) console.log("glider: Version X");
-            var data = hash;
-            var cur = [0, 0, 0];
-            var x = 0;
-            var delta, sign;
-            while (x < data.length) {
-                for (var i = 0; i < 3; i++) {
-                    if (data.charAt(x) == "_") {
-                        x++;
-                        delta = encodeString.indexOf(data.charAt(x++));
-                        sign = 1;
-                        if (delta >= 32) {
-                            sign = -1;
-                        }
-                        delta = (delta & 0x1f) << 6;
-                        delta += encodeString.indexOf(data.charAt(x++))
-                        delta *= sign;
-                    }
-                    else {
-                        delta = encodeString.indexOf(data.charAt(x++)) - 32;
-                    }
-                    cur[i] += delta;
-                }
-                var parity = (cur[0] + cur[1] + cur[2]) & 1;
-                
-                //when we instantiate this voxel, we have to give it a state (+ or -)
-                //on the other side, when someone gets it out of a dictionary, ask if it is + or -
-                // package the voxel in a dictionary object with an int                             
-                // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
-                // var cell_obj = new CellObj(threejs, 1 );
+        var parity = (cur[0] + cur[1] + cur[2]) & 1;
+        // var voxel = new THREE.Mesh(cube, new THREE.MeshColorFillMaterial(colors[parity * 5]));
+        // //voxel.position.x = cur[0] * 50 + 25;
+        // //voxel.position.y = cur[1] * 50 + 25;
+        // //voxel.position.z = cur[2] * 50 + 25;
+        // setObjPosition(voxel, cur);
+        // voxel.overdraw = true;
+        // scene.addObject(voxel);
+        // putGrid(voxel, cur);
+                           
+        // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
+        // var cell_obj = new CellObj(threejs, 1 );
 
-                var cell_obj = liveCell(cur, DEFAULT_COLOR);
-                mainGrid.put(cur[0],cur[1],cur[2], 1)
+        var cell_obj = liveCell(cur, DEFAULT_COLOR);
+        mainGrid.put(cur[0],cur[1],cur[2], 1)
 
-                //voxel.position.x = cur[0] * 50 + 25;
-                //voxel.position.y = cur[1] * 50 + 25;
-                //voxel.position.z = cur[2] * 50 + 25;
-                var overdraw_bool = true;
-                cell_obj.threejs.overdraw = true;
-              
-            }
-        }
-        else {
-            if (version == "Y") {
-                if (DEBUG) console.log("glider: Version Y");
-                var data = hash;
-                data = encdec_decode(data);
-                var cur = [0, 0, 0];
-                var x = 0;
-                var delta, sign;
-                while (x < data.length) {
-                    for (var i = 0; i < 3; i++) {
-                        delta = data[x++];
-                        cur[i] += delta;
-                    }
-                    var parity = (cur[0] + cur[1] + cur[2]) & 1;
-                    // var voxel = new THREE.Mesh(cube, new THREE.MeshColorFillMaterial(colors[parity * 5]));
-                    // //voxel.position.x = cur[0] * 50 + 25;
-                    // //voxel.position.y = cur[1] * 50 + 25;
-                    // //voxel.position.z = cur[2] * 50 + 25;
-                    // setObjPosition(voxel, cur);
-                    // voxel.overdraw = true;
-                    // scene.addObject(voxel);
-                    // putGrid(voxel, cur);
-                                       
-                    // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
-                    // var cell_obj = new CellObj(threejs, 1 );
-
-                    var cell_obj = liveCell(cur, DEFAULT_COLOR);
-                    mainGrid.put(cur[0],cur[1],cur[2], 1)
-
-                    //voxel.position.x = cur[0] * 50 + 25;
-                    //voxel.position.y = cur[1] * 50 + 25;
-                    //voxel.position.z = cur[2] * 50 + 25;
-                    // console.log("bloody cell: ", cell_obj);
-                    var overdraw_bool = true;
-                    cell_obj.threejs.overdraw = true;
-                    
-                }
-            }
-            else {
-                alert("Unknown encoding type: " + version);
-            }
-        }
+        //voxel.position.x = cur[0] * 50 + 25;
+        //voxel.position.y = cur[1] * 50 + 25;
+        //voxel.position.z = cur[2] * 50 + 25;
+        // console.log("bloody cell: ", cell_obj);
+        var overdraw_bool = true;
+        cell_obj.threejs.overdraw = true;
     }
     updateHash();
 }
@@ -1287,6 +1183,29 @@ function hash2url(hash){
     return url;
 }
 
+// helper for updateHash
+function linearizeCoords(keys, data, cur) {
+	var cellCount = 0;
+    for (var k in keys) {
+        key = keys[k];
+        xyz = eval("[" + key + "]");
+        var skip = false;
+        for (var j = 0; j < 3; j++) {
+            if (xyz[j] < axisMin || xyz[j] > axisMax) {
+                skip = true;
+                break;
+            }
+        }
+        if (skip) continue;
+        for (var j = 0; j < 3; j++) {
+            var delta = xyz[j] - cur[j];
+            data.push(delta);
+        }
+        cur = xyz;
+        cellCount++;
+    }
+    return cellCount;
+}
 
 // This actually creates the hash URL
 // We need to think about how we want to share configurations
@@ -1314,30 +1233,12 @@ function updateHash(noLink) {
     keys_n.sort();
     var oldCount = cellCount;
     cellCount = 0;
-    var data = [];
-    // var data = [keys_p.length];
+    // var data = [];
+    var data = [keys_p.length];
     var cur = [0, 0, 0];
-    /// coord version no longer meaningful
-    // if (qargs.science  == true) var coords = [];
-    for (var k in keys_p) {
-        key = keys_p[k];
-        xyz = eval("[" + key + "]");
-        // if (qargs.science == true) coords.push('(' + xyz + ')');
-        var skip = false;
-        for (var j = 0; j < 3; j++) {
-            if (xyz[j] < axisMin || xyz[j] > axisMax) {
-                skip = true;
-                break;
-            }
-        }
-        if (skip) continue;
-        for (var j = 0; j < 3; j++) {
-            var delta = xyz[j] - cur[j];
-            data.push(delta);
-        }
-        cur = xyz;
-        cellCount++;
-    }
+    
+    cellCount += linearizeCoords(keys_p, data, cur);
+    
     data = encdec_encode(data);
     data +=     (frame % 6 + 6) % 6
     if (!noLink) {                          // yuck. The part of my job I hate
