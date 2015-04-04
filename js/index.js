@@ -374,54 +374,44 @@ bugg = 1000;
     document.addEventListener( 'DOMMouseScroll', onDocumentMouseWheel, false );
     
 
-    if (window.location.hash) {
-        //an old way with hashes instead of question marks
-        //defunct!!
-        //included for backwards compatibility
-        buildFromHash();
-    }
-    else {
-        if (qargs.hash) {
-            buildFromHash(qargs.hash);
-            if (qargs.sel) {
-                lastSelectedEl = document.getElementById(qargs.sel);
-                lastSelectedEl.style.backgroundColor = 0x00f0ff;
-                if (history.replaceState) {
-                    var url = "" + window.location;
-                    var i = url.indexOf('&sel=');
-                    if (i > -1) {
-                        var j = i + 1 + url.substr(i+1).indexOf('&');
-                        url = url.substr(0, i) + url.substr(j);
-                        history.replaceState(url, url, url);
-                    }
-                }
-            }
-        }
-        else {
-            if (qargs.coords) {
-                // console.log("look!:",qargs.coords);
-                var coords = [];
-                var s = qargs.coords.split(",(");
-                for (var i=0; i<s.length; i++) {
-                    var coord = s[i].replace("(", "")
-                    coord = coord.split(",");
-                    for (var j=0; j<3; j++) {
-                        coord[j] = parseInt(coord[j]);
-                    }
-                    coords.push(coord);
-                }
-                buildFromCoords(coords);
-            }
-            else {
-              
-                // this is the inital state to get you interested when you hit the site and have never done anything
-                //it is just two gliders
-                //automatically puts the gliders thing in
-                
-                selectHash('PeciXwDuTA0', document.getElementById("introHash"));
-            }
-        }
-    }
+	if (qargs.hash) {
+		buildFromHash(qargs.hash);
+		if (qargs.sel) {
+			lastSelectedEl = document.getElementById(qargs.sel);
+			lastSelectedEl.style.backgroundColor = 0x00f0ff;
+			if (history.replaceState) {
+				var url = "" + window.location;
+				var i = url.indexOf('&sel=');
+				if (i > -1) {
+					var j = i + 1 + url.substr(i + 1).indexOf('&');
+					url = url.substr(0, i) + url.substr(j);
+					history.replaceState(url, url, url);
+				}
+			}
+		}
+	} else {
+		if (qargs.coords) {
+			// console.log("look!:",qargs.coords);
+			var coords = [];
+			var s = qargs.coords.split(",(");
+			for (var i = 0; i < s.length; i++) {
+				var coord = s[i].replace("(", "")
+				coord = coord.split(",");
+				for (var j = 0; j < 3; j++) {
+					coord[j] = parseInt(coord[j]);
+				}
+				coords.push(coord);
+			}
+			buildFromCoords(coords);
+		} else {
+
+			// this is the inital state to get you interested when you hit the site and have never done anything
+			//it is just two gliders
+			//automatically puts the gliders thing in
+
+			// selectHash('PeciXwDuTA0', document.getElementById("introHash"));
+		}
+	}
     
     //g means Global
     gInitialHash = gUpdateHash;
@@ -1100,11 +1090,29 @@ function refreshUrl(hash) {
     }
 }
 function buildFromHash(hash) {
+    var phase = hash.substr(hash.length-1, hash.length);
+    frame = parseInt(phase);
+    if ('' + frame == "NaN") {
+        frame = 0;
+    }
+    else {
+        hash = hash.substr( 0, hash.length - 1 );
+    }
+    var states = 2;
+    if (frame >= 6) {
+    	states = 3;
+    	frame -= 6;
+    }
     var data = hash;
     console.log("DEBUG buldFromHash:", hash)
     data = encdec_decode(data);
     console.log("DEBUG decode data:", data)
-    var len_p = data.shift();
+    if (states==3) {
+	    var len_p = data.shift();	
+    }
+    else {
+    	len_p = data.length;
+    }
     console.log("DEBUG length of key_p:", len_p)
     console.log("DEBUG decode data after shift:", data)
     var cur = [0, 0, 0];
@@ -1112,6 +1120,7 @@ function buildFromHash(hash) {
     var delta, sign;
     while (x < data.length) {
         var state = 1;
+    	if (x == len_p) cur = [0, 0, 0];
         if (x >= len_p) state = -1;
         for (var i = 0; i < 3; i++) {
             delta = data[x++];
@@ -1247,12 +1256,13 @@ function updateHash(noLink) {
     cellCount += linearizeCoords(keys_p, data, cur);
     console.log("DEBUG data:", data);
 	var data2 = [];
+    cur = [0, 0, 0];
     cellCount += linearizeCoords(keys_n, data2, cur);
     data = data.concat(data2);
     console.log("DEBUG data:", data);
     
     data = encdec_encode(data);
-    data +=     (frame % 6 + 6) % 6
+    data += (((frame % 6 + 6) % 6) + 6)		 // OMG look at that! +6 = 3state
     if (!noLink) {                          // yuck. The part of my job I hate
         gUpdateHash = data;
     }
