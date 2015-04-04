@@ -76,7 +76,7 @@ var gInitialFrame;
 var encodeString = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
 var frame = 0; //
 var cellCount = 0;
-var mode = "mirror";
+var mode = "wrap";
 var axisMin = -12;
 var axisMax = 11;
 var processSpeed = "fast";
@@ -189,11 +189,12 @@ bugg = 1000;
         // that's the green trail thing they used to show path
         CELL_TRAIL = parseInt(qargs.cell_trail_a);
     }
-    
+    mode = "wrap";
     if (qargs.mode) {
         mode = qargs.mode;
+        mode = "wrap";
     }
-    
+    mode = "wrap";
     if (DEBUG) console.log("DEBUG query args:", qargs, "axisMax:", axisMax, "axisMin:", axisMin)
     
     
@@ -227,9 +228,15 @@ bugg = 1000;
     
     //Graphical Grid
     var geometry = new THREE.Geometry();
+    var vertical = new THREE.Geometry();
     geometry.vertices.push( new THREE.Vertex( new THREE.Vector3( axisMin * 50, 0, 0 ) ) );
     geometry.vertices.push( new THREE.Vertex( new THREE.Vector3( (axisMax+1) * 50, 0, 0 ) ) );
+    vertical.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, axisMin * 50, 0 ) ) );
+    vertical.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, (axisMax+1) * 50, 0 ) ) );
     linesMaterial = new THREE.LineColorMaterial( 0x000000, 0.2 );
+    xLineMaterial = new THREE.LineColorMaterial( 0xFF0000, 1 );
+    yLineMaterial = new THREE.LineColorMaterial( 0x00FF00, 1 );
+    zLineMaterial = new THREE.LineColorMaterial( 0x0000FF, 1 );
     
     if (!qargs.nogrid) {
         for (var i = 0; i <= axisMax - axisMin + 1; i++) {
@@ -244,6 +251,20 @@ bugg = 1000;
             scene.addObject(line);
             
         }
+            //var line = new THREE.Line(geometry, linesMaterial);
+            //((axisMax - axisMin)/2 * 50) + axisMin * 50
+            var line = new THREE.Line(geometry, zLineMaterial);
+            line.position.z = 0;
+            scene.addObject(line);
+
+            var line = new THREE.Line(vertical, yLineMaterial);
+            scene.addObject(line);
+
+            var line = new THREE.Line(geometry, xLineMaterial);
+            line.position.x = 0;
+            line.rotation.y = 90 * Math.PI / 180;
+            scene.addObject(line);
+
     }
     
     
@@ -264,7 +285,7 @@ bugg = 1000;
         adjustCamera();
     }
     else {
-        cube = new Cube( 42, 42, 42 );
+        cube = new Cube( 50, 50, 50 );
     }
     
     cubette = new Cube(10, 10, 10);
@@ -717,7 +738,7 @@ function toggleRunning(){
     }
     else {
         gLastCursor = cursor;
-        cursor = [0, 2000, 0];
+        //cursor = [0, 2000, 0];
         isRunning = true;
     }
     setBrushPosition(cursor);
@@ -759,45 +780,51 @@ function onDocumentKeyDown( event ) {
     
     // THIS is the navigation interface
     // We should think about redesigning
+    var yChan = -1 * Math.sin( theta * Math.PI / 360 );
+    var xChan = 1 * Math.cos( theta * Math.PI / 360 );
     var field = (cursor[0] ^ cursor[1] ^ cursor[2]) & 1;
     if (DEBUG) console.log("FIELD:", field);
     switch( event.keyCode ) {
         case 37:                           // LEFT
             event.preventDefault();
-            cursor[0]--;
+            cursor[2]+=Math.round(yChan);
+            cursor[0]-=Math.round(xChan);
             clampCursor();
             setBrushPosition(cursor);
             render(); 
             break;
         case 40:                           // DOWN
             event.preventDefault();
-            cursor[2]--;
+            cursor[2]-=Math.round(xChan);
+            cursor[0]-=Math.round(yChan);
             clampCursor();
             setBrushPosition(cursor);
             render(); 
             break;
         case 39:                           // RIGHT
             event.preventDefault();
-            cursor[0]++;
+            cursor[2]-=Math.round(yChan);
+            cursor[0]+=Math.round(xChan);
             clampCursor();
             setBrushPosition(cursor);
             render(); 
             break;
         case 38:                           // UP
             event.preventDefault();
-            cursor[2]++;
+            cursor[2]+=Math.round(xChan);
+            cursor[0]+=Math.round(yChan);
             clampCursor();
             setBrushPosition(cursor);
             render(); 
             break;
-        case 85:                           // U
+        case 33:                           // Page Up
             event.preventDefault();
             cursor[1]++;
             clampCursor();
             setBrushPosition(cursor);
             render(); 
             break;
-        case 68:                           // D
+        case 34:                           // D
             event.preventDefault();
             cursor[1]--;
             clampCursor();
@@ -965,8 +992,10 @@ function onDocumentMouseMove( event ) {
     if ( isMouseDown ) {
         theta = - ( ( event.clientX - onMouseDownPosition.x ) * 0.5 ) + onMouseDownTheta;
         phi = ( ( event.clientY - onMouseDownPosition.y ) * 0.5 ) + onMouseDownPhi;
-        phi = Math.min( 180, Math.max( 0, phi ) );
+        phi = Math.min( 180, Math.max( -180, phi ) );
         adjustCamera();
+        //var collisionray =THREE.Ray({camera.position.x,camera.position.y,camera.position.z},{theta,phi,0});
+        //collisionray.get
         render();
     }
 }
@@ -1263,21 +1292,37 @@ function hash2url(hash){
 // We need to think about how we want to share configurations
 // Dan is using a hash but it is a quick and dirty solution. Might be something better
 function updateHash(noLink) {
-    var key, keys = [];
+    var key;
+    var keys_p = [];
+    var keys_n = [];
 
     for (key in visual_and_numerical_grid) {
-        keys.push(key);
+    	console.log("DEBUG cell:", key, visual_and_numerical_grid[key]['state'])
+    	if (visual_and_numerical_grid[key]['state'] == -1) {
+	        keys_n.push(key);
+    	}
+    	else if (visual_and_numerical_grid[key]['state'] == 1) {
+	        keys_p.push(key);
+    	}
+    	else {
+    		console.log("ERROR -- state undefined:", key, visual_and_numerical_grid[key])
+    		// alert("ERROR state != 1 | -1")
+    	}
     }
-    keys.sort();
+    /// traveling salesman or min span tree would be better here (optimize for small deltas on all 3 coords)
+    keys_p.sort();
+    keys_n.sort();
     var oldCount = cellCount;
     cellCount = 0;
     var data = [];
+    // var data = [keys_p.length];
     var cur = [0, 0, 0];
-    if (qargs.science  == true) var coords = [];
-    for (var k in keys) {
-        key = keys[k];
+    /// coord version no longer meaningful
+    // if (qargs.science  == true) var coords = [];
+    for (var k in keys_p) {
+        key = keys_p[k];
         xyz = eval("[" + key + "]");
-        if (qargs.science == true) coords.push('(' + xyz + ')');
+        // if (qargs.science == true) coords.push('(' + xyz + ')');
         var skip = false;
         for (var j = 0; j < 3; j++) {
             if (xyz[j] < axisMin || xyz[j] > axisMax) {
@@ -1455,6 +1500,7 @@ function randomCells(){
         
         updateHash();
         refreshUrl(gUpdateHash);
+        reset(gUpdateHash);
     });
 }
 // https://gist.github.com/665235
