@@ -1101,12 +1101,18 @@ function refreshUrl(hash) {
 }
 function buildFromHash(hash) {
     var data = hash;
+    console.log("DEBUG buldFromHash:", hash)
     data = encdec_decode(data);
-    console.log("DEBUG length of key_p:", data.shift())
+    console.log("DEBUG decode data:", data)
+    var len_p = data.shift();
+    console.log("DEBUG length of key_p:", len_p)
+    console.log("DEBUG decode data after shift:", data)
     var cur = [0, 0, 0];
     var x = 0;
     var delta, sign;
     while (x < data.length) {
+        var state = 1;
+        if (x >= len_p) state = -1;
         for (var i = 0; i < 3; i++) {
             delta = data[x++];
             cur[i] += delta;
@@ -1125,7 +1131,8 @@ function buildFromHash(hash) {
         // var cell_obj = new CellObj(threejs, 1 );
 
         var cell_obj = liveCell(cur, DEFAULT_COLOR);
-        mainGrid.put(cur[0],cur[1],cur[2], 1)
+        console.log("DEBUG put:", x, cur, state)
+        mainGrid.put(cur[0],cur[1],cur[2], state)
 
         //voxel.position.x = cur[0] * 50 + 25;
         //voxel.position.y = cur[1] * 50 + 25;
@@ -1234,10 +1241,15 @@ function updateHash(noLink) {
     var oldCount = cellCount;
     cellCount = 0;
     // var data = [];
-    var data = [keys_p.length];
+    var data = [keys_p.length * 3];
     var cur = [0, 0, 0];
-    
+
     cellCount += linearizeCoords(keys_p, data, cur);
+    console.log("DEBUG data:", data);
+	var data2 = [];
+    cellCount += linearizeCoords(keys_n, data2, cur);
+    data = data.concat(data2);
+    console.log("DEBUG data:", data);
     
     data = encdec_encode(data);
     data +=     (frame % 6 + 6) % 6
