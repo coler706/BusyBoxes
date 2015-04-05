@@ -76,7 +76,7 @@ var gInitialFrame;
 var encodeString = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
 var frame = 0; //
 var cellCount = 0;
-var mode = "mirror";
+var mode = "wrap";
 var axisMin = -12;
 var axisMax = 11;
 var processSpeed = "fast";
@@ -189,11 +189,12 @@ bugg = 1000;
         // that's the green trail thing they used to show path
         CELL_TRAIL = parseInt(qargs.cell_trail_a);
     }
-    
+    mode = "wrap";
     if (qargs.mode) {
         mode = qargs.mode;
+        mode = "wrap";
     }
-    
+    mode = "wrap";
     if (DEBUG) console.log("DEBUG query args:", qargs, "axisMax:", axisMax, "axisMin:", axisMin)
     
     
@@ -227,9 +228,15 @@ bugg = 1000;
     
     //Graphical Grid
     var geometry = new THREE.Geometry();
+    var vertical = new THREE.Geometry();
     geometry.vertices.push( new THREE.Vertex( new THREE.Vector3( axisMin * 50, 0, 0 ) ) );
     geometry.vertices.push( new THREE.Vertex( new THREE.Vector3( (axisMax+1) * 50, 0, 0 ) ) );
+    vertical.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, axisMin * 50, 0 ) ) );
+    vertical.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, (axisMax+1) * 50, 0 ) ) );
     linesMaterial = new THREE.LineColorMaterial( 0x000000, 0.2 );
+    xLineMaterial = new THREE.LineColorMaterial( 0xFF0000, 1 );
+    yLineMaterial = new THREE.LineColorMaterial( 0x00FF00, 1 );
+    zLineMaterial = new THREE.LineColorMaterial( 0x0000FF, 1 );
     
     if (!qargs.nogrid) {
         for (var i = 0; i <= axisMax - axisMin + 1; i++) {
@@ -244,6 +251,20 @@ bugg = 1000;
             scene.addObject(line);
             
         }
+            //var line = new THREE.Line(geometry, linesMaterial);
+            //((axisMax - axisMin)/2 * 50) + axisMin * 50
+            var line = new THREE.Line(geometry, zLineMaterial);
+            line.position.z = 0;
+            scene.addObject(line);
+
+            var line = new THREE.Line(vertical, yLineMaterial);
+            scene.addObject(line);
+
+            var line = new THREE.Line(geometry, xLineMaterial);
+            line.position.x = 0;
+            line.rotation.y = 90 * Math.PI / 180;
+            scene.addObject(line);
+
     }
     
     
@@ -264,7 +285,7 @@ bugg = 1000;
         adjustCamera();
     }
     else {
-        cube = new Cube( 42, 42, 42 );
+        cube = new Cube( 50, 50, 50 );
     }
     
     cubette = new Cube(10, 10, 10);
@@ -353,54 +374,44 @@ bugg = 1000;
     document.addEventListener( 'DOMMouseScroll', onDocumentMouseWheel, false );
     
 
-    if (window.location.hash) {
-        //an old way with hashes instead of question marks
-        //defunct!!
-        //included for backwards compatibility
-        buildFromHash();
-    }
-    else {
-        if (qargs.hash) {
-            buildFromHash(qargs.hash);
-            if (qargs.sel) {
-                lastSelectedEl = document.getElementById(qargs.sel);
-                lastSelectedEl.style.backgroundColor = 0x00f0ff;
-                if (history.replaceState) {
-                    var url = "" + window.location;
-                    var i = url.indexOf('&sel=');
-                    if (i > -1) {
-                        var j = i + 1 + url.substr(i+1).indexOf('&');
-                        url = url.substr(0, i) + url.substr(j);
-                        history.replaceState(url, url, url);
-                    }
-                }
-            }
-        }
-        else {
-            if (qargs.coords) {
-                // console.log("look!:",qargs.coords);
-                var coords = [];
-                var s = qargs.coords.split(",(");
-                for (var i=0; i<s.length; i++) {
-                    var coord = s[i].replace("(", "")
-                    coord = coord.split(",");
-                    for (var j=0; j<3; j++) {
-                        coord[j] = parseInt(coord[j]);
-                    }
-                    coords.push(coord);
-                }
-                buildFromCoords(coords);
-            }
-            else {
-              
-                // this is the inital state to get you interested when you hit the site and have never done anything
-                //it is just two gliders
-                //automatically puts the gliders thing in
-                
-                selectHash('PeciXwDuTA0', document.getElementById("introHash"));
-            }
-        }
-    }
+	if (qargs.hash) {
+		buildFromHash(qargs.hash);
+		if (qargs.sel) {
+			lastSelectedEl = document.getElementById(qargs.sel);
+			lastSelectedEl.style.backgroundColor = 0x00f0ff;
+			if (history.replaceState) {
+				var url = "" + window.location;
+				var i = url.indexOf('&sel=');
+				if (i > -1) {
+					var j = i + 1 + url.substr(i + 1).indexOf('&');
+					url = url.substr(0, i) + url.substr(j);
+					history.replaceState(url, url, url);
+				}
+			}
+		}
+	} else {
+		if (qargs.coords) {
+			// console.log("look!:",qargs.coords);
+			var coords = [];
+			var s = qargs.coords.split(",(");
+			for (var i = 0; i < s.length; i++) {
+				var coord = s[i].replace("(", "")
+				coord = coord.split(",");
+				for (var j = 0; j < 3; j++) {
+					coord[j] = parseInt(coord[j]);
+				}
+				coords.push(coord);
+			}
+			buildFromCoords(coords);
+		} else {
+
+			// this is the inital state to get you interested when you hit the site and have never done anything
+			//it is just two gliders
+			//automatically puts the gliders thing in
+
+			// selectHash('PeciXwDuTA0', document.getElementById("introHash"));
+		}
+	}
     
     //g means Global
     gInitialHash = gUpdateHash;
@@ -717,7 +728,7 @@ function toggleRunning(){
     }
     else {
         gLastCursor = cursor;
-        cursor = [0, 2000, 0];
+        //cursor = [0, 2000, 0];
         isRunning = true;
     }
     setBrushPosition(cursor);
@@ -759,45 +770,51 @@ function onDocumentKeyDown( event ) {
     
     // THIS is the navigation interface
     // We should think about redesigning
+    var yChan = -1 * Math.sin( theta * Math.PI / 360 );
+    var xChan = 1 * Math.cos( theta * Math.PI / 360 );
     var field = (cursor[0] ^ cursor[1] ^ cursor[2]) & 1;
     if (DEBUG) console.log("FIELD:", field);
     switch( event.keyCode ) {
         case 37:                           // LEFT
             event.preventDefault();
-            cursor[0]--;
+            cursor[2]+=Math.round(yChan);
+            cursor[0]-=Math.round(xChan);
             clampCursor();
             setBrushPosition(cursor);
             render(); 
             break;
         case 40:                           // DOWN
             event.preventDefault();
-            cursor[2]--;
+            cursor[2]-=Math.round(xChan);
+            cursor[0]-=Math.round(yChan);
             clampCursor();
             setBrushPosition(cursor);
             render(); 
             break;
         case 39:                           // RIGHT
             event.preventDefault();
-            cursor[0]++;
+            cursor[2]-=Math.round(yChan);
+            cursor[0]+=Math.round(xChan);
             clampCursor();
             setBrushPosition(cursor);
             render(); 
             break;
         case 38:                           // UP
             event.preventDefault();
-            cursor[2]++;
+            cursor[2]+=Math.round(xChan);
+            cursor[0]+=Math.round(yChan);
             clampCursor();
             setBrushPosition(cursor);
             render(); 
             break;
-        case 85:                           // U
+        case 33:                           // Page Up
             event.preventDefault();
             cursor[1]++;
             clampCursor();
             setBrushPosition(cursor);
             render(); 
             break;
-        case 68:                           // D
+        case 34:                           // D
             event.preventDefault();
             cursor[1]--;
             clampCursor();
@@ -965,8 +982,10 @@ function onDocumentMouseMove( event ) {
     if ( isMouseDown ) {
         theta = - ( ( event.clientX - onMouseDownPosition.x ) * 0.5 ) + onMouseDownTheta;
         phi = ( ( event.clientY - onMouseDownPosition.y ) * 0.5 ) + onMouseDownPhi;
-        phi = Math.min( 180, Math.max( 0, phi ) );
+        phi = Math.min( 180, Math.max( -180, phi ) );
         adjustCamera();
+        //var collisionray =THREE.Ray({camera.position.x,camera.position.y,camera.position.z},{theta,phi,0});
+        //collisionray.get
         render();
     }
 }
@@ -1071,14 +1090,6 @@ function refreshUrl(hash) {
     }
 }
 function buildFromHash(hash) {
-    var version = false;
-    if (hash) {
-        version = "Y"; 
-    }
-    else {
-        version = window.location.hash.substr(1, 1);
-        hash = window.location.hash.substr(3);
-    }
     var phase = hash.substr(hash.length-1, hash.length);
     frame = parseInt(phase);
     if ('' + frame == "NaN") {
@@ -1087,127 +1098,57 @@ function buildFromHash(hash) {
     else {
         hash = hash.substr( 0, hash.length - 1 );
     }
-    if ( version == "A" ) {
-        if (DEBUG) console.log("glider: Version A");
-        var current = { x: 0, y: 0, z: 0, c: 0 }
-        var data = decode( hash );
-        var i = 0, l = data.length;
-        while ( i < l ) {
-            var code = data[ i ++ ].toString( 2 );
-            if ( code.charAt( 1 ) == "1" ) current.x += data[ i ++ ] - 32;
-            if ( code.charAt( 2 ) == "1" ) current.y += data[ i ++ ] - 32;
-            if ( code.charAt( 3 ) == "1" ) current.z += data[ i ++ ] - 32;
-            if ( code.charAt( 4 ) == "1" ) current.c += data[ i ++ ] - 32;
-            if ( code.charAt( 0 ) == "1" ) {
-                // var voxel = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ current.c ] ) );
-                //   //voxel.position.x = current.x * 50 + 25;
-                //   //voxel.position.y = current.y * 50 + 25;
-                //   //voxel.position.z = current.z * 50 + 25;
-                //   setObjPosition(voxel, [current.x, current.y, current.z]);
-                //   voxel.overdraw = true;
-                //   scene.addObject( voxel );
-                //   putGrid(voxel, [current.x, current.y, current.z])
-                //   
-                var special_xyz = [current.x, current.y, current.z];
-                // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
-                // var cell_obj = new CellObj(threejs, 1 );
-                var cell_obj = liveCell(special_xyz, DEFAULT_COLOR);
-                mainGrid.put(special_xyz[0],special_xyz[1],special_xyz[2])
-
-                //voxel.position.x = cur[0] * 50 + 25;
-                //voxel.position.y = cur[1] * 50 + 25;
-                //voxel.position.z = cur[2] * 50 + 25;
-                var overdraw_bool = true;
-                cell_obj.threejs.overdraw = true;
-                
-            }
+    var states = 2;
+    if (frame >= 6) {
+    	states = 3;
+    	frame -= 6;
+    }
+    var data = hash;
+    data = encdec_decode(data);
+    if (states==3) {
+	    var len_p = data.shift();	
+    }
+    else {
+    	len_p = data.length;
+    }
+    var cur = [0, 0, 0];
+    var x = 0;
+    var delta, sign;
+    while (x < data.length) {
+        var state = 1;
+    	if (x == len_p) cur = [0, 0, 0];
+        if (x >= len_p) state = -1;
+        for (var i = 0; i < 3; i++) {
+            delta = data[x++];
+            cur[i] += delta;
         }
-    } else {
-        if (version == "X") {
-            if (DEBUG) console.log("glider: Version X");
-            var data = hash;
-            var cur = [0, 0, 0];
-            var x = 0;
-            var delta, sign;
-            while (x < data.length) {
-                for (var i = 0; i < 3; i++) {
-                    if (data.charAt(x) == "_") {
-                        x++;
-                        delta = encodeString.indexOf(data.charAt(x++));
-                        sign = 1;
-                        if (delta >= 32) {
-                            sign = -1;
-                        }
-                        delta = (delta & 0x1f) << 6;
-                        delta += encodeString.indexOf(data.charAt(x++))
-                        delta *= sign;
-                    }
-                    else {
-                        delta = encodeString.indexOf(data.charAt(x++)) - 32;
-                    }
-                    cur[i] += delta;
-                }
-                var parity = (cur[0] + cur[1] + cur[2]) & 1;
-                
-                //when we instantiate this voxel, we have to give it a state (+ or -)
-                //on the other side, when someone gets it out of a dictionary, ask if it is + or -
-                // package the voxel in a dictionary object with an int                             
-                // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
-                // var cell_obj = new CellObj(threejs, 1 );
+        var parity = (cur[0] + cur[1] + cur[2]) & 1;
+        // var voxel = new THREE.Mesh(cube, new THREE.MeshColorFillMaterial(colors[parity * 5]));
+        // //voxel.position.x = cur[0] * 50 + 25;
+        // //voxel.position.y = cur[1] * 50 + 25;
+        // //voxel.position.z = cur[2] * 50 + 25;
+        // setObjPosition(voxel, cur);
+        // voxel.overdraw = true;
+        // scene.addObject(voxel);
+        // putGrid(voxel, cur);
+                           
+        // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
+        // var cell_obj = new CellObj(threejs, 1 );
 
-                var cell_obj = liveCell(cur, DEFAULT_COLOR);
-                mainGrid.put(cur[0],cur[1],cur[2], 1)
+		var cc;
+		if (parity && state==1) cc = POS_ODD;
+		if (parity && state==-1) cc = NEG_ODD;
+		if (!parity && state==1) cc = POS_EVEN;
+		if (!parity && state==-1) cc = NEG_EVEN;
+        var cell_obj = liveCell(cur, cc, state);
+        mainGrid.put(cur[0],cur[1],cur[2], state)
 
-                //voxel.position.x = cur[0] * 50 + 25;
-                //voxel.position.y = cur[1] * 50 + 25;
-                //voxel.position.z = cur[2] * 50 + 25;
-                var overdraw_bool = true;
-                cell_obj.threejs.overdraw = true;
-              
-            }
-        }
-        else {
-            if (version == "Y") {
-                if (DEBUG) console.log("glider: Version Y");
-                var data = hash;
-                data = encdec_decode(data);
-                var cur = [0, 0, 0];
-                var x = 0;
-                var delta, sign;
-                while (x < data.length) {
-                    for (var i = 0; i < 3; i++) {
-                        delta = data[x++];
-                        cur[i] += delta;
-                    }
-                    var parity = (cur[0] + cur[1] + cur[2]) & 1;
-                    // var voxel = new THREE.Mesh(cube, new THREE.MeshColorFillMaterial(colors[parity * 5]));
-                    // //voxel.position.x = cur[0] * 50 + 25;
-                    // //voxel.position.y = cur[1] * 50 + 25;
-                    // //voxel.position.z = cur[2] * 50 + 25;
-                    // setObjPosition(voxel, cur);
-                    // voxel.overdraw = true;
-                    // scene.addObject(voxel);
-                    // putGrid(voxel, cur);
-                                       
-                    // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
-                    // var cell_obj = new CellObj(threejs, 1 );
-
-                    var cell_obj = liveCell(cur, DEFAULT_COLOR);
-                    mainGrid.put(cur[0],cur[1],cur[2], 1)
-
-                    //voxel.position.x = cur[0] * 50 + 25;
-                    //voxel.position.y = cur[1] * 50 + 25;
-                    //voxel.position.z = cur[2] * 50 + 25;
-                    // console.log("bloody cell: ", cell_obj);
-                    var overdraw_bool = true;
-                    cell_obj.threejs.overdraw = true;
-                    
-                }
-            }
-            else {
-                alert("Unknown encoding type: " + version);
-            }
-        }
+        //voxel.position.x = cur[0] * 50 + 25;
+        //voxel.position.y = cur[1] * 50 + 25;
+        //voxel.position.z = cur[2] * 50 + 25;
+        // console.log("bloody cell: ", cell_obj);
+        var overdraw_bool = true;
+        cell_obj.threejs.overdraw = true;
     }
     updateHash();
 }
@@ -1258,26 +1199,12 @@ function hash2url(hash){
     return url;
 }
 
-
-// This actually creates the hash URL
-// We need to think about how we want to share configurations
-// Dan is using a hash but it is a quick and dirty solution. Might be something better
-function updateHash(noLink) {
-    var key, keys = [];
-
-    for (key in visual_and_numerical_grid) {
-        keys.push(key);
-    }
-    keys.sort();
-    var oldCount = cellCount;
-    cellCount = 0;
-    var data = [];
-    var cur = [0, 0, 0];
-    if (qargs.science  == true) var coords = [];
+// helper for updateHash
+function linearizeCoords(keys, data, cur) {
+	var cellCount = 0;
     for (var k in keys) {
         key = keys[k];
         xyz = eval("[" + key + "]");
-        if (qargs.science == true) coords.push('(' + xyz + ')');
         var skip = false;
         for (var j = 0; j < 3; j++) {
             if (xyz[j] < axisMin || xyz[j] > axisMax) {
@@ -1293,8 +1220,45 @@ function updateHash(noLink) {
         cur = xyz;
         cellCount++;
     }
+    return cellCount;
+}
+
+// This actually creates the hash URL
+// We need to think about how we want to share configurations
+// Dan is using a hash but it is a quick and dirty solution. Might be something better
+function updateHash(noLink) {
+    var key;
+    var keys_p = [];
+    var keys_n = [];
+
+    for (key in visual_and_numerical_grid) {
+    	if (visual_and_numerical_grid[key]['state'] == -1) {
+	        keys_n.push(key);
+    	}
+    	else if (visual_and_numerical_grid[key]['state'] == 1) {
+	        keys_p.push(key);
+    	}
+    	else {
+    		console.log("ERROR -- state undefined:", key, visual_and_numerical_grid[key])
+    		// alert("ERROR state != 1 | -1")
+    	}
+    }
+    /// traveling salesman or min span tree would be better here (optimize for small deltas on all 3 coords)
+    keys_p.sort();
+    keys_n.sort();
+    var oldCount = cellCount;
+    cellCount = 0;
+    // var data = [];
+    var data = [keys_p.length * 3];
+    var cur = [0, 0, 0];
+
+    cellCount += linearizeCoords(keys_p, data, cur);
+	var data2 = [];
+    cur = [0, 0, 0];
+    cellCount += linearizeCoords(keys_n, data2, cur);
+    data = data.concat(data2);
     data = encdec_encode(data);
-    data +=     (frame % 6 + 6) % 6
+    data += (((frame % 6 + 6) % 6) + 6)		 // OMG look at that! +6 = 3state
     if (!noLink) {                          // yuck. The part of my job I hate
         gUpdateHash = data;
     }
@@ -1455,6 +1419,7 @@ function randomCells(){
         
         updateHash();
         refreshUrl(gUpdateHash);
+        reset(gUpdateHash);
     });
 }
 // https://gist.github.com/665235
