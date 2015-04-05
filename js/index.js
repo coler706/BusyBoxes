@@ -595,7 +595,9 @@ function mainLoop(noRender) {
         //calling iterate with an anonymous function as callback(cb)
         mainGrid.iterate(function(grid, x, y, z, f){
         	var old = grid.get(x, y, z);
-        	var coi = gRule(grid, x, y, z, f);
+        	var dir = 1;
+        	if (direction != "forward") dir = -1;
+        	var coi = gRule(grid, x, y, z, f, dir);
         	if (coi == null) coi = old;
             if(old && !coi){
                 if (DEBUG) console.log("WE ARE KILLING!", [x,y,z]);

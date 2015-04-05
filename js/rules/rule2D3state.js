@@ -21,7 +21,7 @@ XOR = function(a,b) {
   return ( a || b ) && !( a && b );
 };
 
-rule2D3state = function(grid, x,y,z, frame){
+rule2D3state = function(grid, x,y,z, frame, direction){
 	// if ((frame+x+y+z) % 2 === 0)
 		// return;
 	if ((x + y + z & 1) != (frame & 1)) return; 								// only process if field parity is correct
@@ -74,14 +74,14 @@ rule2D3state = function(grid, x,y,z, frame){
 	}
 	
 	rotatorState = get(grid, rotatorLocation);
-	if (rotatorState === 1)
+	if (rotatorState === direction)
 		return get(grid,
 			add(vector(
 				deltaFromMeToRotatorLocation.z,
 				0,
 				-deltaFromMeToRotatorLocation.x),
 				rotatorLocation.x,rotatorLocation.y,rotatorLocation.z));
-	if (rotatorState === -1)
+	if (rotatorState === -direction)
 		return get(grid,
 			add(vector(
 				-deltaFromMeToRotatorLocation.z,
