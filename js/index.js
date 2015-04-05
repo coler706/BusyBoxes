@@ -1093,6 +1093,8 @@ function refreshUrl(hash) {
 }
 function buildFromHash(hash) {
     var phase = hash.substr(hash.length-1, hash.length);
+    if (phase=='a') phase = "10";							// phase is 0-11 in hex
+    if (phase=='b') phase = "11";
     frame = parseInt(phase);
     if ('' + frame == "NaN") {
         frame = 0;
@@ -1102,7 +1104,7 @@ function buildFromHash(hash) {
     }
     var states = 2;
     if (frame >= 6) {
-    	states = 3;
+    	states = 3;											// really means new load/save protocol	
     	frame -= 6;
     }
     var data = hash;
@@ -1260,7 +1262,8 @@ function updateHash(noLink) {
     cellCount += linearizeCoords(keys_n, data2, cur);
     data = data.concat(data2);
     data = encdec_encode(data);
-    data += (((frame % 6 + 6) % 6) + 6)		 // OMG look at that! +6 = 3state
+    phase = ((frame % 6 + 6) % 6)			// crazy JS negaive mod hack
+    data += "0123456789ab"[phase+6]		    // OMG look at that! +6 = 3state
     if (!noLink) {                          // yuck. The part of my job I hate
         gUpdateHash = data;
     }
