@@ -1144,7 +1144,7 @@ function buildFromHash(hash) {
 		if (parity && state==-1) cc = NEG_ODD;
 		if (!parity && state==1) cc = POS_EVEN;
 		if (!parity && state==-1) cc = NEG_EVEN;
-        var cell_obj = liveCell(cur, cc);
+        var cell_obj = liveCell(cur, cc, state);
         console.log("DEBUG put:", x, cur, state)
         mainGrid.put(cur[0],cur[1],cur[2], state)
 
@@ -1269,6 +1269,7 @@ function updateHash(noLink) {
     data = encdec_encode(data);
     data += (((frame % 6 + 6) % 6) + 6)		 // OMG look at that! +6 = 3state
     if (!noLink) {                          // yuck. The part of my job I hate
+    	console.log("DEBUG uphash:", data)
         gUpdateHash = data;
     }
     if (data != lasthash) {
@@ -1307,6 +1308,7 @@ function clearGrid() {
 
 function reset(hash) {
     if (!hash) hash = gUpdateHash;
+    console.log("DEBUG reset hash:", hash)
     cursor = gLastCursor;
     setBrushPosition(cursor);
     clearScreen();
