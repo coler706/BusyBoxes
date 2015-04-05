@@ -36,7 +36,6 @@ function Grid(x, y, z, mod_range, mode, state) {
 	}
 	//update new set of cells
 	this.put = function(x, y, z, cell_state) {
-		console.log("DEBUG Grid.put:", x, y, z, cell_state)
 		var key = "" + x + "," + y + "," + z;
 
 		if (cell_state == 1 || cell_state === -1) {

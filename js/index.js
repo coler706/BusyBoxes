@@ -1104,17 +1104,13 @@ function buildFromHash(hash) {
     	frame -= 6;
     }
     var data = hash;
-    console.log("DEBUG buldFromHash:", hash)
     data = encdec_decode(data);
-    console.log("DEBUG decode data:", data)
     if (states==3) {
 	    var len_p = data.shift();	
     }
     else {
     	len_p = data.length;
     }
-    console.log("DEBUG length of key_p:", len_p)
-    console.log("DEBUG decode data after shift:", data)
     var cur = [0, 0, 0];
     var x = 0;
     var delta, sign;
@@ -1145,7 +1141,6 @@ function buildFromHash(hash) {
 		if (!parity && state==1) cc = POS_EVEN;
 		if (!parity && state==-1) cc = NEG_EVEN;
         var cell_obj = liveCell(cur, cc, state);
-        console.log("DEBUG put:", x, cur, state)
         mainGrid.put(cur[0],cur[1],cur[2], state)
 
         //voxel.position.x = cur[0] * 50 + 25;
@@ -1237,7 +1232,6 @@ function updateHash(noLink) {
     var keys_n = [];
 
     for (key in visual_and_numerical_grid) {
-    	console.log("DEBUG cell:", key, visual_and_numerical_grid[key]['state'])
     	if (visual_and_numerical_grid[key]['state'] == -1) {
 	        keys_n.push(key);
     	}
@@ -1259,17 +1253,13 @@ function updateHash(noLink) {
     var cur = [0, 0, 0];
 
     cellCount += linearizeCoords(keys_p, data, cur);
-    console.log("DEBUG data:", data);
 	var data2 = [];
     cur = [0, 0, 0];
     cellCount += linearizeCoords(keys_n, data2, cur);
     data = data.concat(data2);
-    console.log("DEBUG data:", data);
-    
     data = encdec_encode(data);
     data += (((frame % 6 + 6) % 6) + 6)		 // OMG look at that! +6 = 3state
     if (!noLink) {                          // yuck. The part of my job I hate
-    	console.log("DEBUG uphash:", data)
         gUpdateHash = data;
     }
     if (data != lasthash) {
@@ -1308,7 +1298,6 @@ function clearGrid() {
 
 function reset(hash) {
     if (!hash) hash = gUpdateHash;
-    console.log("DEBUG reset hash:", hash)
     cursor = gLastCursor;
     setBrushPosition(cursor);
     clearScreen();
