@@ -1139,7 +1139,12 @@ function buildFromHash(hash) {
         // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
         // var cell_obj = new CellObj(threejs, 1 );
 
-        var cell_obj = liveCell(cur, DEFAULT_COLOR);
+		var cc;
+		if (parity && state==1) cc = POS_ODD;
+		if (parity && state==-1) cc = NEG_ODD;
+		if (!parity && state==1) cc = POS_EVEN;
+		if (!parity && state==-1) cc = NEG_EVEN;
+        var cell_obj = liveCell(cur, cc);
         console.log("DEBUG put:", x, cur, state)
         mainGrid.put(cur[0],cur[1],cur[2], state)
 
