@@ -3,9 +3,11 @@
  * http://arxiv.org/abs/1206.2060
  */
 
-STATES=3;
+bbRule = {}
 
-bbRule = function(grid, x, y, z, frm) {
+bbRule.STATES=3;
+
+bbRule.rule = function(grid, x, y, z, frm) {
 	var offx, offy, offz, swpx, swpy, swpz;
 	var coi = grid.get(x, y, z);
 	if ((x + y + z & 1) != (frm & 1)) return coi; 								// only process if field parity is correct
@@ -76,17 +78,17 @@ bbRule = function(grid, x, y, z, frm) {
 }
 
 // Knight's move offsets
-var bb_offsetx = [+2, +1, -1, -2, +2, +1, -1, -2];
-var bb_offsety = [+1, +2, +2, +1, -1, -2, -2, -1];
-var bb_offsetz = [0, 0, 0, 0, 0, 0, 0, 0];
+bbRule.bb_offsetx = [+2, +1, -1, -2, +2, +1, -1, -2];
+bbRule.bb_offsety = [+1, +2, +2, +1, -1, -2, -2, -1];
+bbRule.bb_offsetz = [0, 0, 0, 0, 0, 0, 0, 0];
 
 // corresponding swap offsets
-var bb_swapx = [+1, -1, +1, -1, +1, -1, +1, -1];
-var bb_swapy = [-1, +1, +1, -1, +1, -1, -1, +1];
-var bb_swapz = [0, 0, 0, 0, 0, 0, 0, 0];
+bbRule.bb_swapx = [+1, -1, +1, -1, +1, -1, +1, -1];
+bbRule.bb_swapy = [-1, +1, +1, -1, +1, -1, -1, +1];
+bbRule.bb_swapz = [0, 0, 0, 0, 0, 0, 0, 0];
 
 // Javascript ftw
-function trueMod(v, base) {
+bbRule.trueMod = function(v, base) {
     if (v < 0) {
         return ((v % base) + base) % base;
     }
@@ -94,8 +96,8 @@ function trueMod(v, base) {
 }
 
 // and TDD also ftw
-bb_TEST=0;
-if(bb_TEST) {
+bbRule.bb_TEST=0;
+if(bbRule.bb_TEST) {
 	var grid = new Grid(10, 10, 10);
 	grid.put(0, 0, 0, 1);
 	grid.put(1, 2, 0, 1);
