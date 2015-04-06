@@ -5,7 +5,7 @@
 
 bbRule = {}
 
-bbRule.STATES=3;
+bbRule.STATES=2;
 
 bbRule.rule = function(grid, x, y, z, frm) {
 	var offx, offy, offz, swpx, swpy, swpz;
@@ -49,43 +49,43 @@ bbRule.rule = function(grid, x, y, z, frm) {
 		return coi;
 	}
 	
-	var m = trueMod(frame, 3);													// set up offsets & swap coords dep on phase
+	var m = bbRule.trueMod(frame, 3);													// set up offsets & swap coords dep on phase
 	if (m==0) {
-		offx = bb_offsetx;
-		offy = bb_offsety;
-		offz = bb_offsetz;
-		swpx = bb_swapx;
-		swpy = bb_swapy;
-		swpz = bb_swapz;
+		offx = bbRule.offsetx;
+		offy = bbRule.offsety;
+		offz = bbRule.offsetz;
+		swpx = bbRule.swapx;
+		swpy = bbRule.swapy;
+		swpz = bbRule.swapz;
 	}
 	if (m==1) {
-		offx = bb_offsetz;
-		offy = bb_offsetx;
-		offz = bb_offsety;
-		swpx = bb_swapz;
-		swpy = bb_swapx;
-		swpz = bb_swapy;
+		offx = bbRule.offsetz;
+		offy = bbRule.offsetx;
+		offz = bbRule.offsety;
+		swpx = bbRule.swapz;
+		swpy = bbRule.swapx;
+		swpz = bbRule.swapy;
 	}
 	if (m==2) {
-		offx = bb_offsety;
-		offy = bb_offsetz;
-		offz = bb_offsetx;
-		swpx = bb_swapy;
-		swpy = bb_swapz;
-		swpz = bb_swapx;
+		offx = bbRule.offsety;
+		offy = bbRule.offsetz;
+		offz = bbRule.offsetx;
+		swpx = bbRule.swapy;
+		swpy = bbRule.swapz;
+		swpz = bbRule.swapx;
 	}
 	return onePlane();
 }
 
 // Knight's move offsets
-bbRule.bb_offsetx = [+2, +1, -1, -2, +2, +1, -1, -2];
-bbRule.bb_offsety = [+1, +2, +2, +1, -1, -2, -2, -1];
-bbRule.bb_offsetz = [0, 0, 0, 0, 0, 0, 0, 0];
+bbRule.offsetx = [+2, +1, -1, -2, +2, +1, -1, -2];
+bbRule.offsety = [+1, +2, +2, +1, -1, -2, -2, -1];
+bbRule.offsetz = [0, 0, 0, 0, 0, 0, 0, 0];
 
 // corresponding swap offsets
-bbRule.bb_swapx = [+1, -1, +1, -1, +1, -1, +1, -1];
-bbRule.bb_swapy = [-1, +1, +1, -1, +1, -1, -1, +1];
-bbRule.bb_swapz = [0, 0, 0, 0, 0, 0, 0, 0];
+bbRule.swapx = [+1, -1, +1, -1, +1, -1, +1, -1];
+bbRule.swapy = [-1, +1, +1, -1, +1, -1, -1, +1];
+bbRule.swapz = [0, 0, 0, 0, 0, 0, 0, 0];
 
 // Javascript ftw
 bbRule.trueMod = function(v, base) {
@@ -96,8 +96,8 @@ bbRule.trueMod = function(v, base) {
 }
 
 // and TDD also ftw
-bbRule.bb_TEST=0;
-if(bbRule.bb_TEST) {
+bbRule.TEST=0;
+if(bbRule.TEST) {
 	var grid = new Grid(10, 10, 10);
 	grid.put(0, 0, 0, 1);
 	grid.put(1, 2, 0, 1);

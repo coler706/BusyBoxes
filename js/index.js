@@ -597,7 +597,7 @@ function mainLoop(noRender) {
         	var old = grid.get(x, y, z);
         	var dir = 1;
         	if (direction != "forward") dir = -1;
-        	var coi = gRule(grid, x, y, z, f, dir);
+        	var coi = gRule.rule(grid, x, y, z, f, dir);
         	if (coi == null) coi = old;
             if(old && !coi){
                 if (DEBUG) console.log("WE ARE KILLING!", [x,y,z]);
@@ -901,7 +901,6 @@ function onDocumentKeyDown( event ) {
             render();
             break;
         case 32:                           // SPACE
-        
             event.preventDefault();
             if (isRunning) break;
             var obj = getGrid(cursor);
@@ -916,10 +915,8 @@ function onDocumentKeyDown( event ) {
 
               mainGrid.put(cursor[0],cursor[1],cursor[2], 1);
             }
-            else if (STATES == 3 && obj.state === 1){
+            else if (gRule.STATES == 3 && obj.state === 1){
                 killCell(cursor);
-
-
                 updateHash(); 
                 gInitialHash = lasthash;
                 gInitialFrame = frame;
@@ -930,8 +927,6 @@ function onDocumentKeyDown( event ) {
                 else {
                 	liveCell(cursor, NEG_EVEN, -1 );
                 }
-
-
                 mainGrid.put(cursor[0],cursor[1],cursor[2], -1);
             }
             else{

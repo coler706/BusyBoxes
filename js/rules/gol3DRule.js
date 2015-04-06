@@ -1,6 +1,11 @@
+/// I like 1,3,5 so it's default
 GOL3D_VALS = [1, 3, 5];
 
-gol3DRule135 = function(grid, x,y,z){
+gol3DRule = {}
+
+gol3DRule.STATES = 2;
+
+gol3DRule.rule = function(grid, x,y,z){
 	//var neighbor = grid.get(x-1,y+1,z);
 	var nabes = 0;
 
@@ -32,40 +37,19 @@ gol3DRule135 = function(grid, x,y,z){
 	}
 }
 
-gol3DRule235 = function(grid, x, y, z) {
+/// others to try
+gol3DRule235 = {}
+gol3DRule235.rule = function(grid, x, y, z) {
 	GOL3D_VALS[0] = 2;
 	GOL3D_VALS[1] = 3;
 	GOL3D_VALS[2] = 5;
-	return gol3DRule135(grid, x, y, z);
+	return gol3DRule.rule(grid, x, y, z);
 }
 
-gol3DRule455 = function(grid, x, y, z) {
+gol3DRule455 = {}
+gol3DRule455.rule = function(grid, x, y, z) {
 	GOL3D_VALS[0] = 4;
 	GOL3D_VALS[1] = 5;
 	GOL3D_VALS[2] = 5;
-	return gol3DRule135(grid, x, y, z);
-}
-/*
- * the classic. 3 neighbors births a cell; 2 or 3 neighbors to survive
- */
-gol3DRule = function(grid, x,y,z){
-	var nabes = 0;
-	for(var i = -1; i<= 1; i++){
-		for(var j = -1; j<= 1; j++){
-			for(var k = -1; k<= 1; k++){
-				grid.di
-				if((!(i==0 && j==0 && k==0)) && grid.get(x+i,y+k, z+j)){
-					nabes++;
-				}
-				if((i!=0 && j!=0 && k!=0) && grid.get(x+i,y+k, z+j)){
-					nabes--;
-				}
-			}
-		}
-	}
-	if(grid.get(x,y,z)){
-		if(nabes < 4 || nabes > 7) return 0;//was 2 or 3
-	} else {
-		if(nabes == 8 || nabes==10||nabes==7) return 1;
-	}
+	return gol3DRule.rule(grid, x, y, z);
 }
