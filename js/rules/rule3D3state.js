@@ -21,17 +21,25 @@ rule3D3state.get = function(grid, getLocation) {
 	return grid.get(getLocation.x, getLocation.y, getLocation.z);
 };
 
-rule3D3state.rule = function(grid, x,y,z, frame){
+rule3D3state.trueMod = function(v, base) {
+    if (v < 0) {
+        return ((v % base) + base) % base;
+    }
+    return v % base;
+}
+
+rule3D3state.rule = function(grid, x,y,z, frame, direction){
 	// if ((frame+x+y+z) % 2 === 0)
 		// return;
 	if ((x + y + z & 1) != (frame & 1)) return; 								// only process if field parity is correct
 
 	convertToRealCoordinates = function(vectorInThePlane) {
-		if (frame % 3 === 0) {
+		var phase3 = rule3D3state.trueMod(frame, 3);
+		if (phase3 === 0) {
 			return rule3D3state.add(rule3D3state.vector(vectorInThePlane.x, vectorInThePlane.y, 0), x,y,z);
-		} else if (frame % 3 === 1) {
+		} else if (phase3 === 1) {
 			return rule3D3state.add(rule3D3state.vector(0, vectorInThePlane.x, vectorInThePlane.y), x,y,z);
-		} else if (frame % 3 === 2) {
+		} else if (phase3 === 2) {
 			return rule3D3state.add(rule3D3state.vector(vectorInThePlane.y, 0, vectorInThePlane.x), x,y,z);
 		} else {
 			console.log("ERR: invalid frame: " + frame);
@@ -95,12 +103,12 @@ rule3D3state.rule = function(grid, x,y,z, frame){
 
 	/* Note that the following two return statements could really be combined into one clever return statement.
 	This would increase efficiency by removing the branching but it would also decrease readability */
-	if (rotatorState === 1)
+	if (rotatorState === direction)
 		return getInRealCoordinates(
 			rule3D3state.add(deltaFromMeToRotatorLocation,
 			deltaFromMeToRotatorLocation.y,
 			-deltaFromMeToRotatorLocation.x));
-	if (rotatorState === -1)
+	if (rotatorState === -direction)
 		return getInRealCoordinates(
 			rule3D3state.add(deltaFromMeToRotatorLocation,
 			-deltaFromMeToRotatorLocation.y,
