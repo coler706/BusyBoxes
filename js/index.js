@@ -201,7 +201,7 @@ bugg = 1000;
     //Create a scene
     container = document.createElement( 'div' );
     // container = document.getElementById('canvas-container');
-    console.log(container);
+    // console.log(container);
     document.body.appendChild( container );
     var info = document.createElement( 'div' );
     info.style.position = 'absolute';
