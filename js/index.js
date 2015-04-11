@@ -567,6 +567,30 @@ function killCell(xyz) {
 	// else console.log("killCell: obj not vangrid, doing nothing", xyz, xyz);
 }
 
+function changeCell(xyz, color, state) {
+    if (DEBUG2) console.log("color:", color.toString(16));
+	var cell_obj = visual_and_numerical_grid[xyz];
+    if(state === -1) {
+        cell_obj.state = -1;
+        cell_obj.threejs.material[ 0 ].color.setHex(color ^ 0xFF000000)
+        cell_obj.threejs.overdraw = true;
+
+
+        if (DEBUG2) console.log("look here: ", cell_obj, gThreeInUse, gThreeUnused);
+
+    }
+    else if(state === 1){
+        cell_obj.state = 1;
+        cell_obj.threejs.material[ 0 ].color.setHex(color ^ 0xFF000000)
+        cell_obj.threejs.overdraw = true;
+
+
+        if (DEBUG2) console.log("should be grey--look here: ", cell_obj, gThreeInUse, gThreeUnused);
+
+    }
+    return cell_obj;
+}
+
 //most important
 function mainLoop(noRender) {
     //these are updating those little numbers that are keeping tack of the generation, etc.
@@ -598,30 +622,40 @@ function mainLoop(noRender) {
         	var dir = 1;
         	if (direction != "forward") dir = -1;
         	var coi = gRule.rule(grid, x, y, z, f, dir);
+        	// if (coi != null) console.log("DBG coi:", x, y, z, "state:", coi, "old:", old)
         	if (coi == null) coi = old;
             if(old && !coi){
                 if (DEBUG) console.log("WE ARE KILLING!", [x,y,z]);
                 killCell([x,y,z]);
-            }else if(!old && coi){
+            }else if(old != coi){
                 if (DEBUG) console.log("WE ARE CREATING!", [x,y,z], coi, f);
                 var col;
                 if (f & 1) {
                 	if (coi > 0) {
                 		col = POS_ODD;
+                		// console.log("DBG2 color POS_ODD:", x, y, z, col);
                 	}
                 	else {
                 		col = NEG_ODD;
+                		// console.log("DBG2 color NEG_ODD:", x, y, z, col);
                 	}
                 }
                 else {
                 	if (coi > 0) {
                 		col = POS_EVEN;
+                		// console.log("DBG2 color POS_EVEN:", x, y, z, col);
                 	}
                 	else {
                 		col = NEG_EVEN;
+                		// console.log("DBG2 color NEG_EVEN:", x, y, z, col);
                 	}
                 }
-                liveCell([x,y,z], col, coi);
+                if (!old) {
+                	liveCell([x,y,z], col, coi);
+                }
+                else {
+	                changeCell([x,y,z], col, coi);
+                }
             }
             return coi;
         }, frame);
