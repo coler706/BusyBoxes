@@ -1265,6 +1265,15 @@ function updateHash(noLink) {
     var keys_n = [];
 
     for (key in visual_and_numerical_grid) {
+        var xyz = eval("[" + key + "]");
+        var outOfBounds = false;
+        for (i=0; i<3; i++) {
+            if (xyz[i] > axisMax || xyz[i] < axisMin) {
+                outOfBounds = true;
+                break;
+            }
+        }
+        if (outOfBounds) continue;
     	if (visual_and_numerical_grid[key]['state'] == -1) {
 	        keys_n.push(key);
     	}
