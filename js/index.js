@@ -169,6 +169,26 @@ bugg = 1000;
     else {
     	gRule = bbRule; // for nows
     }
+    if (gRule.Color!=null) {
+        POS_EVEN = gRule.Color;
+        POS_ODD = gRule.Color;
+    }
+    
+    if (gRule.EvenColor!=null) {
+        POS_EVEN = gRule.EvenColor;
+    }
+    
+    if (gRule.OddColor!=null) {
+        POS_ODD = gRule.OddColor;
+    }
+    
+    if (gRule.EvenMinusColor!=null) {
+        NEG_EVEN = gRule.EvenMinusColor;
+    }
+    
+    if (gRule.OddMinusColor!=null) {
+        NEG_ODD = gRule.OddMinusColor;
+    }
     
     if (qargs.dir) {
         direction = qargs.dir;
@@ -275,17 +295,19 @@ bugg = 1000;
     plane.rotation.x = - 90 * Math.PI / 180;
     scene.addObject( plane );
     
-    
+    var boxDim = 50;
+    if (gRule.boxSize != null) boxDim *= gRule.boxSize;
+
     //a way to see just 2 dimensions if there is only one plane of interest
     if (qargs.dim == 2) {
       
         //So we use Squares instead of cubes!
-        cube = new Square( 50, 50, 50 );
+        cube = new Square( boxDim, 1, boxDim);
         phi = 180;
         adjustCamera();
     }
     else {
-        cube = new Cube( 50, 50, 50 );
+        cube = new Cube( boxDim, boxDim, boxDim );
     }
     
     cubette = new Cube(10, 10, 10);

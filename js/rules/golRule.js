@@ -18,5 +18,7 @@ golRule = {
 			if (nabes == 3)
 				return 1;
 		}
-	}
+	},
+	Color: 0x565655,
+	boxSize: 0.74
 }

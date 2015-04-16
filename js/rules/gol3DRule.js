@@ -5,6 +5,9 @@ gol3DRule = {}
 
 gol3DRule.STATES = 2;
 
+gol3DRule.Color = 0x999991;
+gol3DRule.boxSize = 0.74;
+
 gol3DRule.rule = function(grid, x,y,z){
 	//var neighbor = grid.get(x-1,y+1,z);
 	var nabes = 0;
