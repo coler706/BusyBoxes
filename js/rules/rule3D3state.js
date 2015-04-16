@@ -93,8 +93,8 @@ rule3D3state.rule = function(grid, x,y,z, frame, direction){
 		var spaceThatNeedsToBeEmpty = spacesThatNeedToBeEmpty[index];
 
 		if (getInRealCoordinates(rule3D3state.addVectors(deltaFromMeToRotatorLocation, spaceThatNeedsToBeEmpty)) !== 0) {
-			console.log(spaceThatNeedsToBeEmpty);
-			console.log(convertToRealCoordinates(rule3D3state.addVectors(possibleGuyToRotateMe, spaceThatNeedsToBeEmpty)));
+			// console.log("DBG A", spaceThatNeedsToBeEmpty);
+			// console.log("DBG B", convertToRealCoordinates(rule3D3state.addVectors(possibleGuyToRotateMe, spaceThatNeedsToBeEmpty)));
 			return;
 		}
 	}

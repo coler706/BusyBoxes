@@ -221,7 +221,7 @@ bugg = 1000;
     //Create a scene
     container = document.createElement( 'div' );
     // container = document.getElementById('canvas-container');
-    console.log(container);
+    // console.log(container);
     document.body.appendChild( container );
     var info = document.createElement( 'div' );
     info.style.position = 'absolute';
@@ -823,7 +823,7 @@ function onDocumentKeyDown( event ) {
         return;
     }
 //document.getElementById("debug").innerHTML = ''+event.keyCode;
-//if(DEBUG) console.log("key:", event.keyCode);
+// console.log("key:", event.keyCode);
     if (event.shiftKey || event.ctrlKey || event.altKey || event.altGraphKey) return;
     
     // THIS is the navigation interface
@@ -865,6 +865,7 @@ function onDocumentKeyDown( event ) {
             setBrushPosition(cursor);
             render(); 
             break;
+        case 85:                           // U
         case 33:                           // Page Up
             event.preventDefault();
             cursor[1]++;
@@ -872,7 +873,8 @@ function onDocumentKeyDown( event ) {
             setBrushPosition(cursor);
             render(); 
             break;
-        case 34:                           // D
+        case 68:                           // D
+        case 34:                           // Page Down
             event.preventDefault();
             cursor[1]--;
             clampCursor();
