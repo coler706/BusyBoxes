@@ -302,7 +302,7 @@ bugg = 1000;
     if (qargs.dim == 2) {
       
         //So we use Squares instead of cubes!
-        cube = new Square( boxDim, 1, boxDim);
+        cube = new Square( boxDim, boxDim, boxDim);
         phi = 180;
         adjustCamera();
     }
