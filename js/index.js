@@ -489,7 +489,7 @@ function mainLoopSlow() {
 
 function mainLoopScience() {
     if (isRunning && processSpeed == "science") {
-        for (var i=0; i<100; i++) {
+        for (var i=0; i<250; i++) {
             mainLoop(true);                     // no render during main loop for speed
         }
         render();
@@ -626,7 +626,6 @@ function mainLoop(noRender) {
             frame--;
         }
 
-
         ///////////////
 
         if(DEBUG) console.log("frame: ", frame)
@@ -688,7 +687,9 @@ function mainLoop(noRender) {
 
         /// this is where the cells are rendered!!!
         
-        if (!noRender) render();
+        if (!noRender) {
+            render();
+        }
 
         if (direction == "forward") frame++;
         updateHash(true);
@@ -781,15 +782,13 @@ function delGrid(xyz) {
 
 function toggleRunning(){
     if (isRunning) {
-        cursor = gLastCursor;
         isRunning = false;
+        setBrushPosition(cursor);
     }
     else {
-        gLastCursor = cursor;
-        //cursor = [0, 2000, 0];
+        brush.material[ 0 ].color.setHex( 0x00000000 );
         isRunning = true;
     }
-    setBrushPosition(cursor);
 }
 
 function clampCursor() {
@@ -887,9 +886,11 @@ function onDocumentKeyDown( event ) {
             break;
         case 83:                           // S
             event.preventDefault();
-            isRunning = true;
+            if (!isRunning) {
+                toggleRunning();
+            }
             mainLoop();
-            isRunning = false;
+            toggleRunning();
             break;
         case 10:
         case 13:                           // ENTER
