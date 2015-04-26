@@ -4,7 +4,23 @@ body {
     margin: 0px;
     overflow-x: hidden;
 }
+<<<<<<< HEAD
 
+=======
+.light{
+    background-color: #f0f0f0;
+}
+.space{
+  background: url("space.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+#big_chris_container{
+    overflow-y:hidden;
+}
+>>>>>>> origin/master
 .bannerButtons {
     opacity: 0.7;
 }
@@ -26,6 +42,7 @@ body {
 .goHash:hover {
     background-color:white;
 }
+<<<<<<< HEAD
 #leftLinks .menu-item{
     height:30px;
     font-size: 15px;
@@ -41,3 +58,5 @@ body {
     margin:-5px;
 }
 
+=======
+>>>>>>> origin/master
