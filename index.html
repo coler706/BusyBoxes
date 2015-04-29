@@ -31,6 +31,7 @@
       <link rel="stylesheet" type="text/css" href="css/sidebar.css"></link>
       <link rel="stylesheet" type="text/css" href="css/PopUp.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" ></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
       <script src="js/bootstrap.min.js"></script>
       <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     </head>
@@ -249,9 +250,12 @@
         <div style="display:none">
             <div id="banner">
                 <div>
-                    </p><button class="bannerButtons btn btn-default" onclick="toggleRunning()">RUN/STOP</button>
+                    <button class="bannerButtons btn btn-default" id="run_toggle">
+                      <i class="fa fa-play"></i>
+                      Play
+                    </button>
                     <button class="bannerButtons btn btn-default" onclick="fastSlow()">FAST/SLOW</button>
-                    <button class="bannerButtons btn btn-default" onclick="isRunning = true; mainLoop(); isRunning = false;">STEP</button>
+                    <button class="bannerButtons btn btn-default" onclick="IS_RUNNING = true; mainLoop(); IS_RUNNING = false;">STEP</button>
                     <button class="bannerButtons btn btn-default" onclick="reverseDirection()">DIRECTION</button>
                     <button class="bannerButtons btn btn-default" onclick="randomCells(12, -2, 1)">RANDOM</button>
                     <button class="bannerButtons btn btn-default" onclick="toggleTrails()">TRAILS</button>
@@ -291,6 +295,7 @@
         
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/bindings.js"></script>
+        <script type="text/javascript" src="js/navbar_buttons.js"></script>
         
         <div style="display:none">
             <img src="tracking.jpg"></img>

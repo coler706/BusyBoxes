@@ -67,7 +67,7 @@ var rules = [];
 var cursor = [0, 0, 0];
 var gLastCursor = cursor;
 var visual_and_numerical_grid = {};
-var isRunning = false;
+IS_RUNNING = false;
 var direction = "forward";
 var lasthash = "";
 var gUpdateHash = "";
@@ -450,7 +450,7 @@ bugg = 1000;
     
     if (qargs.play) {
         setTimeout(function() {
-            if (!isRunning) {
+            if (!IS_RUNNING) {
                 toggleRunning();
             }
         }, 2500);
@@ -488,7 +488,7 @@ function mainLoopSlow() {
 }
 
 function mainLoopScience() {
-    if (isRunning && processSpeed == "science") {
+    if (IS_RUNNING && processSpeed == "science") {
         for (var i=0; i<250; i++) {
             mainLoop(true);                     // no render during main loop for speed
         }
@@ -621,7 +621,7 @@ function mainLoop(noRender) {
     document.getElementById("direction").innerHTML = direction;
     var phase = (frame % 6 + 6) %6;
     
-    if (isRunning) {
+    if (IS_RUNNING) {
         if (direction == "reverse") {
             frame--;
         }
@@ -781,13 +781,13 @@ function delGrid(xyz) {
 }
 
 function toggleRunning(){
-    if (isRunning) {
-        isRunning = false;
+    if (IS_RUNNING) {
+        IS_RUNNING = false;
         setBrushPosition(cursor);
     }
     else {
         brush.material[ 0 ].color.setHex( 0x00000000 );
-        isRunning = true;
+        IS_RUNNING = true;
     }
 }
 
@@ -886,7 +886,7 @@ function onDocumentKeyDown( event ) {
             break;
         case 83:                           // S
             event.preventDefault();
-            if (!isRunning) {
+            if (!IS_RUNNING) {
                 toggleRunning();
             }
             mainLoop();
@@ -898,7 +898,7 @@ function onDocumentKeyDown( event ) {
             toggleRunning();
             break;
         case 191:                           // / ?
-            if (isRunning) {
+            if (IS_RUNNING) {
                 toggleRunning();
             }
             event.preventDefault();
@@ -918,7 +918,7 @@ function onDocumentKeyDown( event ) {
             break;
         case 70:                            // F
             event.preventDefault();
-            if (!isRunning) {
+            if (!IS_RUNNING) {
                 toggleRunning();
             }
             fastSlow();
@@ -961,7 +961,7 @@ function onDocumentKeyDown( event ) {
             break;
         case 32:                           // SPACE
             event.preventDefault();
-            if (isRunning) break;
+            if (IS_RUNNING) break;
             var obj = getGrid(cursor);
             if (!obj){
                 if (field==1) {
@@ -1342,7 +1342,7 @@ function updateHash(noLink) {
         gInitialFrame = frame;
     }
     lasthash = data;
-    // if (!isRunning && typeof(console) != "undefined" && console.log) console.log("last hash:", data);
+    // if (!IS_RUNNING && typeof(console) != "undefined" && console.log) console.log("last hash:", data);
     if (data.length > 12) {
         data = data.substr(0,5) + ".." + data.substr(data.length-5)
     }
@@ -1409,7 +1409,7 @@ function selectHash(hash, el, size, trail) {
 }
 
 function clearScreen() {
-    isRunning = false;
+    IS_RUNNING = false;
     visual_and_numerical_grid = {};
     mainGrid.clear();
     gThreeUsed = [];			// these guys are trooublesome
@@ -1589,7 +1589,7 @@ function scienceTestInit() {
     gStartHash = lasthash;
     processSpeed = "test";
     //console.log("DEBUG lasthash:", lasthash)
-    isRunning = true;
+    IS_RUNNING = true;
     setTimeout(scienceTestLoop, 10);
 }   
 
@@ -1611,7 +1611,7 @@ function scienceTestLoop(){
     }
     else {
         if (DEBUG) console.log("DEBUG trial over. gScienceCounter: ", gScienceCounter, "trial:", gScienceTrial, "hash:", gStartHash)
-        isRunning = false;
+        IS_RUNNING = false;
         processSpeed = "slow";
         var result;
         if (startCellCount != cellCount) {
