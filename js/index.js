@@ -79,7 +79,7 @@ var cellCount = 0;
 var mode = "wrap";
 var axisMin = -12;
 var axisMax = 11;
-var processSpeed = "fast";
+processSpeed = "fast";
 var lastSelectedEl;
 var gLastRefreshedUrl;
 var scrollBarX = false;
@@ -1502,6 +1502,7 @@ function encode( array ) {
     return output;
 }
 function fastSlow() {
+    console.log("speed", processSpeed);
     switch (processSpeed) {
         case "slow":
             processSpeed = "fast";

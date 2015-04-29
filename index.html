@@ -254,13 +254,15 @@
                       <i class="fa fa-play"></i>
                       Play
                     </button>
-                    <button class="bannerButtons btn btn-default" onclick="fastSlow()">FAST/SLOW</button>
-                    <button class="bannerButtons btn btn-default" onclick="IS_RUNNING = true; mainLoop(); IS_RUNNING = false;">STEP</button>
+                    <button class="bannerButtons btn btn-default" id="fast_forward">
+                      SLOW DOWN
+                    </button>
+                    <button class="bannerButtons btn btn-default" id="step_through">STEP</button>
                     <button class="bannerButtons btn btn-default" onclick="reverseDirection()">DIRECTION</button>
                     <button class="bannerButtons btn btn-default" onclick="randomCells(12, -2, 1)">RANDOM</button>
                     <button class="bannerButtons btn btn-default" onclick="toggleTrails()">TRAILS</button>
                     <button class="bannerButtons btn btn-default" onclick="clearGrid()">CLEAR</button>
-                    <button class="bannerButtons btn btn-default" onclick="update()">UPDATE</button>
+                    <button class="bannerButtons btn btn-default" onclick="update()">UPDATE HASH</button>
                     <button class="bannerButtons btn btn-default" onclick="reset()">RESET</button>
                     <!-- <button class="bannerButtons btn btn-default toggle-background">!</button> -->
                     <button class="bannerButtons btn btn-default" data-toggle="modal" data-target="#controls">?</button>
