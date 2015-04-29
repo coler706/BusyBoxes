@@ -326,27 +326,6 @@ bugg = 1000;
     }
     compassRoseAlpha = .5;
 
-    var compassRose1 = new THREE.Mesh( new Cube(10, 10, 100), new THREE.MeshColorFillMaterial( 0xFF0000, compassRoseAlpha) );
-    compassRose1.position.x = -compassRoseOffsetFromCenter;
-    compassRose1.position.y = 0;
-    compassRose1.position.z = compassRoseOffsetFromCenter;
-    compassRose1.overdraw = true;
-    scene.addObject( compassRose1 );
-
-    var compassRose2 = new THREE.Mesh( new Cube(10, 100, 10), new THREE.MeshColorFillMaterial( 0x00FF00, compassRoseAlpha) );
-    compassRose2.position.x = -compassRoseOffsetFromCenter;
-    compassRose2.position.y = 0;
-    compassRose2.position.z = compassRoseOffsetFromCenter;
-    compassRose2.overdraw = true;
-    scene.addObject( compassRose2 );
-
-    var compassRose3 = new THREE.Mesh( new Cube(100, 10, 10), new THREE.MeshColorFillMaterial( 0x0000FF, compassRoseAlpha) );
-    compassRose3.position.x = -compassRoseOffsetFromCenter;
-    compassRose3.position.y = 0;
-    compassRose3.position.z = compassRoseOffsetFromCenter;
-    compassRose3.overdraw = true;
-    scene.addObject( compassRose3 );
-
 
     // this is the cursor that shows where you are going to create a cube
     brush = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ color ], 0.4 ) );
@@ -865,7 +844,7 @@ function onDocumentKeyDown( event ) {
             render(); 
             break;
         case 85:                           // U
-        case 33:                           // Page Up
+        case 16:                           // Page Up
             event.preventDefault();
             cursor[1]++;
             clampCursor();
@@ -873,7 +852,7 @@ function onDocumentKeyDown( event ) {
             render(); 
             break;
         case 68:                           // D
-        case 34:                           // Page Down
+        case 17:                           // Page Down
             event.preventDefault();
             cursor[1]--;
             clampCursor();
