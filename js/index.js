@@ -1515,27 +1515,6 @@ function fastSlow() {
     }
     document.getElementById("showspeed").innerHTML = processSpeed;
 }
-function playStopMusic() {
-    var el = document.getElementById("music");
-    if (!el) {
-        //console.log("loading music:", el)
-        var el = document.createElement('div');
-        el.style.display = 'none';
-        el.innerHTML = '<audio id="music" src="prisoner_ambient003.ogg" loop="true"></audio>';
-        document.body.appendChild(el);
-    }
-    if (!document.musicPlaying) {
-        //console.log("playing music:", el)
-        document.getElementById("music").load(); // well this fixes the chrome bug, but forces play from top
-        document.getElementById("music").play();
-        document.musicPlaying = true;
-    }
-    else {
-        //console.log("stopping music:", el);
-        document.getElementById("music").pause();
-        document.musicPlaying = false;
-    }
-}
 
 function toggleTrails() {
     if (AVG_TRAIL || CELL_TRAIL) {
