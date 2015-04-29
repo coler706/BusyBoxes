@@ -7,6 +7,11 @@ $(".config-dropdown-open").click(function(){
   $(this).toggleClass("dropdown-active");
 });
 
+$("#hide_sidebar").click(function(){
+  console.log("hide");
+  $("#sidebar").fadeToggle("fast");
+});
+
 
 $(window).load(function(){
   if (localStorage.getItem("instructions") != "true"){
