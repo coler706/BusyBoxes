@@ -223,13 +223,6 @@ bugg = 1000;
     // container = document.getElementById('canvas-container');
     // console.log(container);
     document.body.appendChild( container );
-    var info = document.createElement( 'div' );
-    info.style.position = 'absolute';
-    info.style.top = '5px';
-    info.style.width = '100%';
-    info.style.textAlign = 'center';
-    info.innerHTML = document.getElementById("banner").innerHTML;
-    container.appendChild( info );
     
     
     //THREE.js camera

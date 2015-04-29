@@ -10,8 +10,14 @@ $(".config-dropdown-open").click(function(){
 $("#hide_sidebar").click(function(){
   console.log("hide");
   $("#sidebar").fadeToggle("fast");
+  $("#show_sidebar").toggleClass("hidden");
 });
 
+$("#show_sidebar").click(function(){
+  console.log("show");
+  $("#sidebar").fadeToggle("fast");
+  $("#show_sidebar").toggleClass("hidden");
+});
 
 $(window).load(function(){
   if (localStorage.getItem("instructions") != "true"){
