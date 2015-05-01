@@ -544,6 +544,15 @@ function liveCell(xyz, color, state) {
                 if (DEBUG2) console.log("should be grey--look here: ", cell_obj, gThreeInUse, gThreeUnused);
 
             }
+            if(state <-1) {
+                cell_obj.state = state;
+                cell_obj.threejs.material[ 0 ].color.setHex(color ^ 0xFF000000)
+                cell_obj.threejs.overdraw = true;
+
+
+                if (DEBUG2) console.log("look here: ", cell_obj, gThreeInUse, gThreeUnused);
+
+            }
 			// deal with color somehow
 		}
 		gThreeInUse.push(cell_obj);
@@ -857,7 +866,7 @@ function onDocumentKeyDown( event ) {
             setBrushPosition(cursor);
             render(); 
             break;
-        case 85:                           // U
+        case 81:                           // Q
         case 33:                           // Page Up
             event.preventDefault();
             cursor[1]++;
@@ -865,7 +874,7 @@ function onDocumentKeyDown( event ) {
             setBrushPosition(cursor);
             render(); 
             break;
-        case 68:                           // D
+        case 90:                           // Z
         case 34:                           // Page Down
             event.preventDefault();
             cursor[1]--;
@@ -980,6 +989,31 @@ function onDocumentKeyDown( event ) {
                 	liveCell(cursor, NEG_EVEN, -1 );
                 }
                 mainGrid.put(cursor[0],cursor[1],cursor[2], -1);
+            }
+            else if (gRule.STATES == 6 && obj.state < 5){
+                killCell(cursor);
+                updateHash(); 
+                gInitialHash = lasthash;
+                gInitialFrame = frame;
+                render();
+                var newSta=-1;
+                if(obj.state==2){
+                    newSta=-2;
+                }
+                if(obj.state==3){
+                    newSta=-3;
+                }
+                if(obj.state==4){
+                    newSta=-4;
+                }
+                if (field==1) {
+
+                    liveCell(cursor, NEG_ODD, newSta );             
+                }
+                else {
+                    liveCell(cursor, NEG_EVEN, newSta );
+                }
+                mainGrid.put(cursor[0],cursor[1],cursor[2], newSta);
             }
             else{
               killCell(cursor);
@@ -1445,6 +1479,7 @@ function randomCells(){
             width = parseInt(tot * width);
             axMax = [axisMax, axisMax, axisMax];
             axMin = [tot - width + axisMin, axisMin, axisMin];
+
         }
         else {
             width = parseInt(width);
@@ -1455,6 +1490,10 @@ function randomCells(){
             axMin = axMax - (width - 1);
             axMax = [axMax, axMax, axMax];
             axMin = [axMin, axMin, axMin];
+        }
+        if(qargs.dim==2){
+            axMax[1]=0;
+            axMin[1]=0;
         }
         clearScreen();
         if (lastSelectedEl) 
