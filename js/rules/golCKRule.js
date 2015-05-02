@@ -3,19 +3,7 @@
  */
 golCKRule = {}
 
-golCKRule.STATES = 6;
-
-golCKRule.vector = function(x, y, z){
-	return {x:x, y:y, z:z};
-};
-
-golCKRule.add = function(oldVector, x, y, z) {
-	return rule3D3state.vector(oldVector.x + x, oldVector.y + y, oldVector.z + z);
-};
-
-golCKRule.addVectors = function(vector1, vector2) {
-	return rule3D3state.vector(vector1.x + vector2.x, vector1.y + vector2.y, vector1.z + vector2.z);
-};
+golCKRule.STATES = 4;
 
 golCKRule.get = function(grid, getLocation) {
 	return grid.get(getLocation.x, getLocation.y, getLocation.z);
@@ -28,95 +16,30 @@ golCKRule.trueMod = function(v, base) {
     return v % base;
 }
 
-golCKRule.rule = function(grid, x,y,z, frame, direction){
-	// if ((frame+x+y+z) % 2 === 0)
-		// return;
-	if ((x + y + z & 1) != (frame & 1)) return; 								// only process if field parity is correct
-
-	convertToRealCoordinates = function(vectorInThePlane) {
-		var phase3 = rule3D3state.trueMod(frame, 6);
-		if (phase3 === 0) {
-			return rule3D3state.add(rule3D3state.vector(vectorInThePlane.x, vectorInThePlane.y, 0), x,y,z);
-		} else if (phase3 === 1) {
-			return rule3D3state.add(rule3D3state.vector(0, vectorInThePlane.x, vectorInThePlane.y), x,y,z);
-		} else if (phase3 === 2) {
-			return rule3D3state.add(rule3D3state.vector(vectorInThePlane.y, 0, vectorInThePlane.x), x,y,z);
-		} else if (phase3 === 3) {
-			return rule3D3state.add(rule3D3state.vector(0, 0, vectorInThePlane.x), x,y,z);
-		} else if (phase3 === 4) {
-			return rule3D3state.add(rule3D3state.vector(vectorInThePlane.y, 0, 0), x,y,z);
-		} else if (phase3 === 5) {
-			return rule3D3state.add(rule3D3state.vector(0,vectorInThePlane.y, 0), x,y,z);
-		} else {
-			console.log("ERR: invalid frame: " + frame);
-		}
+golCKRule.rule = function(grid, x,y,z){
+	//var neighbor = grid.get(x-1,y+1,z);
+	var nabes = 0;
+	if(grid.get(x,y,z)==1){
+		return -1;
 	}
-
-	getInRealCoordinates = function(vectorInThePlane) {
-		return rule3D3state.get(grid, convertToRealCoordinates(vectorInThePlane));
+	else if(grid.get(x,y,z)===-1){
+		return 0;		
 	}
-
-	var rotatorFound = false;
-	var rotatorLocation;
-	var deltaFromMeToRotatorLocation;
-
-	var possibleGuysToRotateMe = [
-		rule3D3state.vector(+1, 0),
-		rule3D3state.vector(-1, 0),
-		rule3D3state.vector(0, +1),
-		rule3D3state.vector(0, -1)
-	];
-
-	for (index in possibleGuysToRotateMe) {
-		var possibleGuyToRotateMe = possibleGuysToRotateMe[index];
-
-		if (getInRealCoordinates(possibleGuyToRotateMe) !== 0) {
-			if (rotatorFound) {
-				return;
+	else if(grid.get(x,y,z)===-2){
+		return -2;
+	}else{
+	if(grid.get(x,y,z)!=-2){
+		for(var i = -1; i<= 1; i++){
+			for(var j = -1; j<= 1; j++){
+				for(var k = -1; k<= 1; k++){
+					if((i!=0 || j!=0 || k!=0)&((Math.abs(i)+Math.abs(j)+Math.abs(k))==1) && grid.get(x+i,y+j, z+k)===1){
+						if(grid.get(x+2*i,y+2*j, z+2*k)<0){
+							return 1;
+						}
+					}
+				}
 			}
-
-			deltaFromMeToRotatorLocation = possibleGuyToRotateMe;
-			rotatorFound = true;
 		}
 	}
-
-	if (!rotatorFound) {
-		return;
-	}
-	
-	var spacesThatNeedToBeEmpty = [
-		rule3D3state.vector(2, 0),
-		rule3D3state.vector(-2, 0),
-		rule3D3state.vector(0, 2),
-		rule3D3state.vector(0, -2),
-		rule3D3state.vector(1, 1),
-		rule3D3state.vector(-1, -1),
-		rule3D3state.vector(1, -1),
-		rule3D3state.vector(-1, 1)
-	];
-
-	for (var index in spacesThatNeedToBeEmpty) {
-		var spaceThatNeedsToBeEmpty = spacesThatNeedToBeEmpty[index];
-
-		if (getInRealCoordinates(rule3D3state.addVectors(deltaFromMeToRotatorLocation, spaceThatNeedsToBeEmpty)) !== 0) {
-			// console.log("DBG A", spaceThatNeedsToBeEmpty);
-			// console.log("DBG B", convertToRealCoordinates(rule3D3state.addVectors(possibleGuyToRotateMe, spaceThatNeedsToBeEmpty)));
-			return;
-		}
-	}
-	
-	rotatorState = getInRealCoordinates(deltaFromMeToRotatorLocation); // The state of the guy who is doing the rotating here
-
-	/* Note that the following two return statements could really be combined into one clever return statement.
-	This would increase efficiency by removing the branching but it would also decrease readability */
-	if (rotatorState === direction)
-		return getInRealCoordinates(
-			rule3D3state.add(deltaFromMeToRotatorLocation,
-			deltaFromMeToRotatorLocation.y,
-			-deltaFromMeToRotatorLocation.x));
-	if (rotatorState === -direction)
-		return getInRealCoordinates(
-			rule3D3state.add(deltaFromMeToRotatorLocation,
-			-deltaFromMeToRotatorLocation.y,
-			deltaFromMeToRotatorLocation.x));
-};
+	}	
+}
