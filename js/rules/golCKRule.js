@@ -4,7 +4,6 @@
 golCKRule = {}
 
 golCKRule.STATES = 4;
-
 golCKRule.get = function(grid, getLocation) {
 	return grid.get(getLocation.x, getLocation.y, getLocation.z);
 };

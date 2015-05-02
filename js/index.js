@@ -1520,7 +1520,7 @@ function randomCells(){
 function decode( string ) {
     var output = [];
     var removeFir=string.substring(1,string.length).split('');
-    removeFir.forEach( function ( v ) { output.push( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf( v)-26 ); } );
+    string.split('').forEach( function ( v ) { output.push( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf( v)-26 ); } );
     return output;//encdec_decode(string);
 }
 function encode( array ) {
