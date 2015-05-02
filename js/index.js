@@ -85,6 +85,7 @@ var axisMax = 11;
 processSpeed = "fast";
 var lastSelectedEl;
 var gLastRefreshedUrl;
+var gLastRefreshedUrl2;
 var scrollBarX = false;
 var moveFifo = [];
 for (var i=0; i<60; i++) moveFifo.push(0);
@@ -973,7 +974,6 @@ function onDocumentKeyDown( event ) {
                 killCell(cursor);
                 updateHash(); 
                 gInitialHash = lasthash;
-            gInitialHash2 = lasthash2;
                 gInitialFrame = frame;
                 render();
                 if (field==1) {
@@ -988,7 +988,6 @@ function onDocumentKeyDown( event ) {
                 killCell(cursor);
                 updateHash(); 
                 gInitialHash = lasthash;
-            gInitialHash2 = lasthash2;
                 gInitialFrame = frame;
                 render();
                 var newSta=-1;
@@ -1012,7 +1011,6 @@ function onDocumentKeyDown( event ) {
             
             updateHash(); 
             gInitialHash = lasthash;
-            gInitialHash2 = lasthash2;
             gInitialFrame = frame;
             render();
             break;
@@ -1148,9 +1146,8 @@ function setRule(rule){
 
 function refreshUrl(hash) {
     //console.log("should refresh:", url);
-    var url = hash2url(hash,hash2);
+    var url = hash2url(hash);
     gInitialHash = hash;
-    gInitialHash2 = hash2;
     gInitialFrame = frame;
     if (history.replaceState) {
         if(url != gLastRefreshedUrl) {
@@ -1163,7 +1160,7 @@ function refreshUrl(hash) {
         document.location = url;
     }
 }
-function buildFromHash(hash,hash2) {
+function buildFromHash(hash) {
     var phase = hash.substr(hash.length-1, hash.length);
     if (phase=='a') phase = "10";							// phase is 0-11 in hex
     if (phase=='b') phase = "11";
@@ -1179,88 +1176,51 @@ function buildFromHash(hash,hash2) {
     	states = 3;											// really means new load/save protocol	
     	frame -= 6;
     }
-    var data = hash;
-    data = encdec_decode(data);
-    var data2 = hash2;
-    data2 = encdec_decode(data2);
-    if (states==3) {
-	    var len_p = data.shift();	
-    }
-    else {
-    	len_p = data.length;
-    }
-    var cur = [0, 0, 0];
-    var x = 0;
-    var delta, sign;
-    while (x < data.length) {
-        var state = 1;
-    	if (x == len_p) cur = [0, 0, 0];
-        if (x >= len_p) state = -1;
-        for (var i = 0; i < 3; i++) {
-            delta = data[x++];
-            cur[i] += delta;
+    var state=1;
+    for(var hashSection=0;hashSection<hash.split("~").length;hashSection++){
+        if(state==0){
+            state--;
         }
-        var parity = (cur[0] + cur[1] + cur[2]) & 1;
-        // var voxel = new THREE.Mesh(cube, new THREE.MeshColorFillMaterial(colors[parity * 5]));
-        // //voxel.position.x = cur[0] * 50 + 25;
-        // //voxel.position.y = cur[1] * 50 + 25;
-        // //voxel.position.z = cur[2] * 50 + 25;
-        // setObjPosition(voxel, cur);
-        // voxel.overdraw = true;
-        // scene.addObject(voxel);
-        // putGrid(voxel, cur);
-                           
-        // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
-        // var cell_obj = new CellObj(threejs, 1 );
+        var data = decode(hash.split("~")[hashSection]);
+        var cur = [0, 0, 0];
+        var x = 0;
+        var delta, sign;
+        while (x < data.length) {
+            for (var i = 0; i < 3; i++) {
+                delta = data[x++];
+                cur[i] = delta;
+            }
+            var parity = (cur[0] + cur[1] + cur[2]) & 1;
+            // var voxel = new THREE.Mesh(cube, new THREE.MeshColorFillMaterial(colors[parity * 5]));
+            // //voxel.position.x = cur[0] * 50 + 25;
+            // //voxel.position.y = cur[1] * 50 + 25;
+            // //voxel.position.z = cur[2] * 50 + 25;
+            // setObjPosition(voxel, cur);
+            // voxel.overdraw = true;
+            // scene.addObject(voxel);
+            // putGrid(voxel, cur);
+                               
+            // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
+            // var cell_obj = new CellObj(threejs, 1 );
 
-		var cc;
-		if (parity && state==1) cc = POS_ODD;
-		if (parity && state==-1) cc = NEG_ODD;
-		if (!parity && state==1) cc = POS_EVEN;
-		if (!parity && state==-1) cc = NEG_EVEN;
-        var cell_obj = liveCell(cur, cc, state);
-        mainGrid.put(cur[0],cur[1],cur[2], state)
+    		var cc;
+    		if (parity && state==1) cc = POS_ODD;
+    		if (parity && state==-1) cc = NEG_ODD;
+    		if (!parity && state==1) cc = POS_EVEN;
+    		if (!parity && state==-1) cc = NEG_EVEN;
+            if (state==-2) cc = NEG_EVEN;
+            var cell_obj = liveCell(cur, cc, state);
+            mainGrid.put(cur[0],cur[1],cur[2], state);
 
-        //voxel.position.x = cur[0] * 50 + 25;
-        //voxel.position.y = cur[1] * 50 + 25;
-        //voxel.position.z = cur[2] * 50 + 25;
-        // console.log("bloody cell: ", cell_obj);
-        var overdraw_bool = true;
-        cell_obj.threejs.overdraw = true;
-    }
-    cur = [0, 0, 0];
-    x = 0;
-    /*while (x < data2.length) {
-        var state = -2;
-        for (var i = 0; i < 3; i++) {
-            delta = data2[x++];
-            cur[i] += delta;
+            //voxel.position.x = cur[0] * 50 + 25;
+            //voxel.position.y = cur[1] * 50 + 25;
+            //voxel.position.z = cur[2] * 50 + 25;
+            // console.log("bloody cell: ", cell_obj);
+            var overdraw_bool = true;
+            cell_obj.threejs.overdraw = true;
         }
-        var parity = (cur[0] + cur[1] + cur[2]) & 1;
-        // var voxel = new THREE.Mesh(cube, new THREE.MeshColorFillMaterial(colors[parity * 5]));
-        // //voxel.position.x = cur[0] * 50 + 25;
-        // //voxel.position.y = cur[1] * 50 + 25;
-        // //voxel.position.z = cur[2] * 50 + 25;
-        // setObjPosition(voxel, cur);
-        // voxel.overdraw = true;
-        // scene.addObject(voxel);
-        // putGrid(voxel, cur);
-                           
-        // var threejs = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ parity * 5 ] ) );
-        // var cell_obj = new CellObj(threejs, 1 );
-
-		var cc;
-		if (state==-2) cc = NEG_EVEN;
-        var cell_obj = liveCell(cur, cc, state);
-        mainGrid.put(cur[0],cur[1],cur[2], state)
-
-        //voxel.position.x = cur[0] * 50 + 25;
-        //voxel.position.y = cur[1] * 50 + 25;
-        //voxel.position.z = cur[2] * 50 + 25;
-        // console.log("bloody cell: ", cell_obj);
-        var overdraw_bool = true;
-        cell_obj.threejs.overdraw = true;
-    }*/
+        state--;
+    }
     updateHash();
 }
 
@@ -1287,7 +1247,7 @@ function putTheCellInTheGridAndRedraw(cell_obj, cursor, overdraw_bool){
 }
 
 //creates a url that you would go to that uses the hash as a query
-function hash2url(hash,hash2){
+function hash2url(hash){
     var sep = "?";
     var url = "" + window.location;
     if (url[url.length-1] == "/") url = url.substr(0, url.length-1)
@@ -1306,7 +1266,7 @@ function hash2url(hash,hash2){
             sep = "&";
         }
     }
-    url = url.substr(0, i) + sep + "hash=" + hash+"&hash2=" + hash2;
+    url = url.substr(0, i) + sep + "hash=" + hash;
     return url;
 }
 
@@ -1325,10 +1285,10 @@ function linearizeCoords(keys, data, cur) {
         }
         if (skip) continue;
         for (var j = 0; j < 3; j++) {
-            var delta = xyz[j] - cur[j];
+            var delta = xyz[j];
             data.push(delta);
         }
-        cur = xyz;
+        //cur = xyz;
         cellCount++;
     }
     return cellCount;
@@ -1347,7 +1307,7 @@ function updateHash(noLink) {
         var xyz = eval("[" + key + "]");
         var outOfBounds = false;
         for (i=0; i<3; i++) {
-            if (xyz[i] > axisMax || xyz[i] < axisMin) {
+            if (xyz[i] > axisMax || xyz[i] < axisMin || xyz[i] > 12 || xyz[i] < -12) {
                 outOfBounds = true;
                 break;
             }
@@ -1374,7 +1334,7 @@ function updateHash(noLink) {
     var oldCount = cellCount;
     cellCount = 0;
     // var data = [];
-    var data = [keys_p.length * 3];
+    var data = [];
     
     var cur = [0, 0, 0];
 
@@ -1382,20 +1342,17 @@ function updateHash(noLink) {
 	var data2 = [];
     cur = [0, 0, 0];
     cellCount += linearizeCoords(keys_n, data2, cur);
-    var data3 = [keys_q.length * 3];
+    var data3 = [];
     cur = [0, 0, 0];
     cellCount += linearizeCoords(keys_q, data3, cur);
-    data = data.concat(data2);
-    data = encdec_encode(data);
-    data3 = encdec_encode(data3);
+    data = encode(data)+"~"+encode(data2)+"~"+encode(data3);
     phase = ((frame % 6 + 6) % 6)			// crazy JS negaive mod hack
     data += "0123456789ab"[phase+6]		    // OMG look at that! +6 = 3state
     if (!noLink) {                          // yuck. The part of my job I hate
         gUpdateHash = data;
-        gUpdateHash2 = data3;
     }
     if (data != lasthash) {
-        if ((data == gInitialHash)&&(data3 == gInitialHash2)) {
+        if (data == gInitialHash) {
             document.getElementById("duplicates").innerHTML = "cycle: " + Math.abs(frame - gInitialFrame) + " match: frame " + frame + "=" + gInitialFrame;
             gInitialFrame = frame;
         }
@@ -1403,19 +1360,14 @@ function updateHash(noLink) {
     document.getElementById('cellcount').innerHTML = cellCount;
     if (cellCount != oldCount) {
         gInitialHash = data;
-        gInitialHash2 = data3;
         gInitialFrame = frame;
     }
     lasthash = data;
-    lasthash2 = data3;
     // if (!IS_RUNNING && typeof(console) != "undefined" && console.log) console.log("last hash:", data);
     if (data.length > 12) {
         data = data.substr(0,5) + ".." + data.substr(data.length-5)
     }
-     if (data3.length > 12) {
-        data3 = data3.substr(0,5) + ".." + data3.substr(data.length-5)
-    }
-    document.getElementById('showhash').innerHTML = data+"and"+data3;
+    document.getElementById('showhash').innerHTML = data;
     // if (qargs.science == true && typeof(console) != "undefined" && console.log) console.log(''+coords)
 }
 
@@ -1433,14 +1385,13 @@ function clearGrid() {
     refreshUrl(gUpdateHash);
 }
 
-function reset(hash,hash2) {
+function reset(hash) {
     if (!hash) hash = gUpdateHash;
-    if (!hash2) hash2 = gUpdateHash;
     cursor = gLastCursor;
     setBrushPosition(cursor);
     clearScreen();
-    buildFromHash(hash,hash2);
-    refreshUrl(gUpdateHash,gUpdateHash2);
+    buildFromHash(hash);
+    refreshUrl(gUpdateHash);
     document.getElementById("duplicates").innerHTML = "";
 }
 
@@ -1449,12 +1400,12 @@ function update(){
         lastSelectedEl.style.backgroundColor="#ddd";
     }
     updateHash();
-    refreshUrl(gUpdateHash,gUpdateHash2);
+    refreshUrl(gUpdateHash);
 }
 
 
 
-function selectHash(hash,hash2, el, size, trail) {
+function selectHash(hash, el, size, trail) {
     if (!trail) {
         AVG_TRAIL = false;
         CELL_TRAIL = false;
@@ -1464,7 +1415,7 @@ function selectHash(hash,hash2, el, size, trail) {
         if (trail) {
             trailopt = "&trail=" + trail;
         }
-        document.location = "/?size=" + size + trailopt + "&sel=" + el.id + "&hash=" + hash+ "&hash2=" + hash2;
+        document.location = "/?size=" + size + trailopt + "&sel=" + el.id + "&hash=" + hash;
         if (DEBUG) console.log("size and size!!!");
     }
     else {
@@ -1472,7 +1423,7 @@ function selectHash(hash,hash2, el, size, trail) {
             lastSelectedEl.style.backgroundColor = "#ddd";
         }
         if (DEBUG) console.log("no pick me!!!");
-        reset(hash,hash2);
+        reset(hash);
         el.style.backgroundColor = "cyan";
         lastSelectedEl = el;
     }
@@ -1497,7 +1448,6 @@ function clearScreen() {
     avg_trail_a = [];
     cell_trail_a = [];
     lasthash = "";
-    lasthash2 = "";
     if (!qargs.science) direction = "forward";
     document.getElementById("direction").innerHTML = direction;
     document.getElementById("generation").innerHTML = "";
@@ -1562,20 +1512,21 @@ function randomCells(){
         }
         
         updateHash();
-        refreshUrl(gUpdateHash,gUpdateHash2);
-        reset(gUpdateHash,gUpdateHash2);
+        refreshUrl(gUpdateHash);
+        reset(gUpdateHash);
     });
 }
 // https://gist.github.com/665235
 function decode( string ) {
     var output = [];
-    string.split('').forEach( function ( v ) { output.push( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf( v ) ); } );
-    return output;
+    var removeFir=string.substring(1,string.length).split('');
+    removeFir.forEach( function ( v ) { output.push( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf( v)-26 ); } );
+    return output;//encdec_decode(string);
 }
 function encode( array ) {
     var output = "";
-    array.forEach( function ( v ) { output += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt( v ); } );
-    return output;
+    array.forEach( function ( v ) { output += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt( v+26 ); } );
+    return output;//encdec_encode(array);
 }
 function fastSlow() {
     console.log("speed", processSpeed);
