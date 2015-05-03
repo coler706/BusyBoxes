@@ -667,6 +667,20 @@ function mainLoop(noRender) {
                 		// console.log("DBG2 color NEG_EVEN:", x, y, z, col);
                 	}
                 }
+                if(qargs.rule=="golCKRule"){
+                    if (coi ==-1) {
+                        col = NEG_ODD;
+                        // console.log("DBG2 color POS_EVEN:", x, y, z, col);
+                    }
+                    if (coi ==1) {
+                        col = POS_EVEN;
+                        // console.log("DBG2 color POS_EVEN:", x, y, z, col);
+                    }
+                    if(coi==-2){
+                        col = 0x999991;
+                        // console.log("DBG2 color NEG_EVEN:", x, y, z, col);
+                    }
+                }
                 if (!old) {
                 	liveCell([x,y,z], col, coi);
                 }
@@ -984,22 +998,29 @@ function onDocumentKeyDown( event ) {
                 }
                 mainGrid.put(cursor[0],cursor[1],cursor[2], -1);
             }
-            else if (gRule.STATES == 4 && obj.state !=-2){
+            else if (gRule.STATES > 3 && obj.state !=2-gRule.STATES){
                 killCell(cursor);
                 updateHash(); 
                 gInitialHash = lasthash;
                 gInitialFrame = frame;
                 render();
                 var newSta=-1;
-                if(obj.state==-1){
-                    newSta=-2;
+
+                if (obj.state<0) {
+                    newSta=obj.state-1;
                 }
+                
+
                 if (newSta==-1) {
 
                     liveCell(cursor, NEG_ODD, newSta );             
                 }
+                else if (newSta==-2) {
+
+                    liveCell(cursor, 0x999991, newSta );             
+                }
                 else {
-                    liveCell(cursor, NEG_EVEN, newSta );
+                    liveCell(cursor, 0x551A8B, newSta );
                 }
                 mainGrid.put(cursor[0],cursor[1],cursor[2], newSta);
             }
@@ -1209,6 +1230,20 @@ function buildFromHash(hash) {
     		if (!parity && state==1) cc = POS_EVEN;
     		if (!parity && state==-1) cc = NEG_EVEN;
             if (state==-2) cc = NEG_EVEN;
+            if(qargs.rule=="golCKRule"){
+                    if (state ==-1) {
+                        cc = NEG_ODD;
+                        // console.log("DBG2 color POS_EVEN:", x, y, z, col);
+                    }
+                    if (state ==1) {
+                        cc = POS_EVEN;
+                        // console.log("DBG2 color POS_EVEN:", x, y, z, col);
+                    }
+                    if(state==-2){
+                        cc = 0x999991;
+                        // console.log("DBG2 color NEG_EVEN:", x, y, z, col);
+                    }
+                }
             var cell_obj = liveCell(cur, cc, state);
             mainGrid.put(cur[0],cur[1],cur[2], state);
 
@@ -1302,6 +1337,7 @@ function updateHash(noLink) {
     var keys_p = [];
     var keys_n = [];
     var keys_q = [];
+    var keys_t = [];
 
     for (key in visual_and_numerical_grid) {
         var xyz = eval("[" + key + "]");
@@ -1322,6 +1358,9 @@ function updateHash(noLink) {
     	else if (visual_and_numerical_grid[key]['state'] == -2) {
 	        keys_q.push(key);
     	}
+        else if (visual_and_numerical_grid[key]['state'] == -3) {
+            keys_t.push(key);
+        }
     	else {
     		console.log("ERROR -- state undefined:", key, visual_and_numerical_grid[key])
     		// alert("ERROR state != 1 | -1")
@@ -1331,6 +1370,7 @@ function updateHash(noLink) {
     keys_p.sort();
     keys_n.sort();
     keys_q.sort();
+    keys_t.sort();
     var oldCount = cellCount;
     cellCount = 0;
     // var data = [];
@@ -1345,7 +1385,10 @@ function updateHash(noLink) {
     var data3 = [];
     cur = [0, 0, 0];
     cellCount += linearizeCoords(keys_q, data3, cur);
-    data = encode(data)+"~"+encode(data2)+"~"+encode(data3);
+    var data4 = [];
+    cur = [0, 0, 0];
+    cellCount += linearizeCoords(keys_t, data4, cur);
+    data = encode(data)+"~"+encode(data2)+"~"+encode(data3)+"~"+encode(data4);
     phase = ((frame % 6 + 6) % 6)			// crazy JS negaive mod hack
     data += "0123456789ab"[phase+6]		    // OMG look at that! +6 = 3state
     if (!noLink) {                          // yuck. The part of my job I hate
