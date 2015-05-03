@@ -104,7 +104,8 @@ var mainGrid;
 mainGrid = new Grid(24, 24, 24); //FIXME TODO: set size acc to qargs
 var gThreeInUse = [];
 var gThreeUnused = [];
-
+var html5audio=document.getElementById("audio");
+html5audio.load();
 init();
 render();
 
@@ -117,7 +118,27 @@ function CellObj(threejs, state, xyz){
 
 
 //breaks up the hash string and returns different elements of the query
-
+/*function playStopMusic() {
+                var el = document.getElementById("music");
+                if (!el) {
+                    //console.log("loading music:", el)
+                    var el = document.createElement('div');
+                    el.style.display = 'none';
+                    el.innerHTML = '<audio id="music" src="prisoner_ambient003.ogg" loop="true"></audio>';
+                    document.body.appendChild(el);
+                }
+                if (!document.musicPlaying) {
+                    //console.log("playing music:", el)
+                    document.getElementById("music").load(); // well this fixes the chrome bug, but forces play from top
+                    document.getElementById("music").play();
+                    document.musicPlaying = true;
+                }
+                else {
+                    //console.log("stopping music:", el);
+                    document.getElementById("music").pause();
+                    document.musicPlaying = false;
+                }
+            }*/
 function parseQueryArgs() {
     var queryArgs = {};
     var searchString = document.URL;
@@ -155,12 +176,15 @@ function parseQueryArgs() {
       
     return queryArgs;
 }
-
-
+function playclip(){
+    //html5audio.pause()
+    html5audio.currentTime=0
+    html5audio.play()
+}
 function init() {
+    html5audio.load();
 bugg = 1000;
     
-
     if (DEBUG) console.log("init start");
 
     //parses out url query (after "?") and turns them into arguments
@@ -606,6 +630,15 @@ function changeCell(xyz, color, state) {
         if (DEBUG2) console.log("should be grey--look here: ", cell_obj, gThreeInUse, gThreeUnused);
 
     }
+    if(state <-2){
+        cell_obj.state = state;
+        cell_obj.threejs.material[ 0 ].color.setHex(color ^ 0xFF000000)
+        cell_obj.threejs.overdraw = true;
+
+
+        if (DEBUG2) console.log("should be grey--look here: ", cell_obj, gThreeInUse, gThreeUnused);
+
+    }
     return cell_obj;
 }
 
@@ -667,7 +700,7 @@ function mainLoop(noRender) {
                 		// console.log("DBG2 color NEG_EVEN:", x, y, z, col);
                 	}
                 }
-                if(qargs.rule=="golCKRule"){
+                if(qargs.rule=="golCKRule"||qargs.rule=="golCKRule2"){
                     if (coi ==-1) {
                         col = NEG_ODD;
                         // console.log("DBG2 color POS_EVEN:", x, y, z, col);
@@ -1017,10 +1050,13 @@ function onDocumentKeyDown( event ) {
                 }
                 else if (newSta==-2) {
 
-                    liveCell(cursor, 0x999991, newSta );             
+                    liveCell(cursor, NEG_EVEN, newSta );             
                 }
-                else {
+                else if (newSta==-3){
                     liveCell(cursor, 0x551A8B, newSta );
+                }
+                else{
+                    liveCell(cursor, 0x397D02, newSta );
                 }
                 mainGrid.put(cursor[0],cursor[1],cursor[2], newSta);
             }
