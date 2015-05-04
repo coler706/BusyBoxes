@@ -178,7 +178,6 @@ function parseQueryArgs() {
 }
 function playclip(){
     //html5audio.pause()
-    html5audio.currentTime=0
     html5audio.play()
 }
 function init() {
@@ -398,7 +397,7 @@ bugg = 1000;
     
 
 	if (qargs.hash) {
-		buildFromHash(qargs.hash,qargs.hash2);
+		buildFromHash(qargs.hash);
 		if (qargs.sel) {
 			lastSelectedEl = document.getElementById(qargs.sel);
 			lastSelectedEl.style.backgroundColor = 0x00f0ff;
@@ -438,7 +437,6 @@ bugg = 1000;
     
     //g means Global
     gInitialHash = gUpdateHash;
-    gInitialHash2 = gUpdateHash2;
     gInitialFrame = frame;
 
       
@@ -668,6 +666,7 @@ function mainLoop(noRender) {
         
         //calling iterate with an anonymous function as callback(cb)
         mainGrid.iterate(function(grid, x, y, z, f){
+            html5audio.currentTime=0
         	var old = grid.get(x, y, z);
         	var dir = 1;
         	if (direction != "forward") dir = -1;
@@ -1266,7 +1265,9 @@ function buildFromHash(hash) {
     		if (!parity && state==1) cc = POS_EVEN;
     		if (!parity && state==-1) cc = NEG_EVEN;
             if (state==-2) cc = NEG_EVEN;
-            if(qargs.rule=="golCKRule"){
+            if (state==-3) cc=0x551A8B;
+            if (state==-4) cc=0x397D02;
+            if(qargs.rule=="golCKRule"||qargs.rule=="golCKRule2"){
                     if (state ==-1) {
                         cc = NEG_ODD;
                         // console.log("DBG2 color POS_EVEN:", x, y, z, col);
@@ -1275,10 +1276,7 @@ function buildFromHash(hash) {
                         cc = POS_EVEN;
                         // console.log("DBG2 color POS_EVEN:", x, y, z, col);
                     }
-                    if(state==-2){
-                        cc = 0x999991;
-                        // console.log("DBG2 color NEG_EVEN:", x, y, z, col);
-                    }
+                    
                 }
             var cell_obj = liveCell(cur, cc, state);
             mainGrid.put(cur[0],cur[1],cur[2], state);
@@ -1374,6 +1372,7 @@ function updateHash(noLink) {
     var keys_n = [];
     var keys_q = [];
     var keys_t = [];
+    var keys_l = [];
 
     for (key in visual_and_numerical_grid) {
         var xyz = eval("[" + key + "]");
@@ -1397,6 +1396,9 @@ function updateHash(noLink) {
         else if (visual_and_numerical_grid[key]['state'] == -3) {
             keys_t.push(key);
         }
+        else if (visual_and_numerical_grid[key]['state'] == -4) {
+            keys_l.push(key);
+        }
     	else {
     		console.log("ERROR -- state undefined:", key, visual_and_numerical_grid[key])
     		// alert("ERROR state != 1 | -1")
@@ -1407,6 +1409,7 @@ function updateHash(noLink) {
     keys_n.sort();
     keys_q.sort();
     keys_t.sort();
+    keys_l.sort();
     var oldCount = cellCount;
     cellCount = 0;
     // var data = [];
@@ -1424,7 +1427,10 @@ function updateHash(noLink) {
     var data4 = [];
     cur = [0, 0, 0];
     cellCount += linearizeCoords(keys_t, data4, cur);
-    data = encode(data)+"~"+encode(data2)+"~"+encode(data3)+"~"+encode(data4);
+    var data5 = [];
+    cur = [0, 0, 0];
+    cellCount += linearizeCoords(keys_l, data5, cur);
+    data = encode(data)+"~"+encode(data2)+"~"+encode(data3)+"~"+encode(data4)+"~"+encode(data5);
     phase = ((frame % 6 + 6) % 6)			// crazy JS negaive mod hack
     data += "0123456789ab"[phase+6]		    // OMG look at that! +6 = 3state
     if (!noLink) {                          // yuck. The part of my job I hate
