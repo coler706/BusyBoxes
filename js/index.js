@@ -6,7 +6,7 @@ var AVG_TRAIL = false;
 var avg_trail_a = [];
 var trail = [];
 var cell_trail_a = [];
-var cubette = new Cube(10, 10, 10);
+var cubette = new Cube(25, 25, 25);
 DEFAULT_COLOR = 0x8090aa;
 POS_EVEN = 0xff3333;
 POS_ODD = 0x3333ff;
@@ -332,7 +332,6 @@ bugg = 1000;
         cube = new Cube( boxDim, boxDim, boxDim );
     }
     
-    cubette = new Cube(10, 10, 10);
     
     
     //might be to figure out what is in front of the camera

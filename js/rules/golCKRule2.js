@@ -19,25 +19,31 @@ golCKRule2.rule = function(grid, x,y,z){
 	//var neighbor = grid.get(x-1,y+1,z);
 	var nabes = 0;
 	if(grid.get(x,y,z)==1){
-		/*for(var i = -1; i<= 1; i++){
+		for(var i = -1; i<= 1; i++){
 			for(var j = -1; j<= 1; j++){
 				for(var k = -1; k<= 1; k++){
 					if((i!=0 || j!=0 || k!=0)&((Math.abs(i)+Math.abs(j)+Math.abs(k))==1) && grid.get(x+i,y+j, z+k)===-1){
-						if(grid.get(x-i,y-j, z-k)===-4){
-							return -1;
-						}
+						var voxel = new THREE.Mesh(cubette, new THREE.MeshColorFillMaterial(0xf5f5f5));
+                            setObjPosition(voxel, [x+i/2,y+j/2, z+k/2]);
+                            voxel.overdraw = true;
+                            scene.addObject(voxel);
+                            cell_trail_a.push(voxel);
+                            if (cell_trail_a.length > 100) {
+                                scene.removeObject(cell_trail_a[0]);
+                                cell_trail_a = cell_trail_a.splice(1);
+                            }
 					}
 				}
 			}
-		}*/
+		}
 		var voxel = new THREE.Mesh(cubette, new THREE.MeshColorFillMaterial(0xf5f5f5));
                             setObjPosition(voxel, [x,y,z]);
                             voxel.overdraw = true;
                             scene.addObject(voxel);
-                            trail.push(voxel);
-                            if (trail.length > 100) {
-                                scene.removeObject(trail[0]);
-                                trail = trail.splice(1);
+                            cell_trail_a.push(voxel);
+                            if (cell_trail_a.length > 100) {
+                                scene.removeObject(cell_trail_a[0]);
+                                cell_trail_a = cell_trail_a.splice(1);
                             }
 		return -1;
 	}
