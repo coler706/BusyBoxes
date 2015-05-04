@@ -58,11 +58,13 @@ golCKRule2.rule = function(grid, x,y,z){
 	else if(grid.get(x,y,z)===-2){
 		return -2;
 	}else if(grid.get(x,y,z)===-3){
+		changeCell([x,y,z], 0x551A8B, -3 );
 		for(var i = -1; i<= 1; i++){
 			for(var j = -1; j<= 1; j++){
 				for(var k = -1; k<= 1; k++){
 					if((i!=0 || j!=0 || k!=0)&((Math.abs(i)+Math.abs(j)+Math.abs(k))==1) && grid.get(x+i,y+j, z+k)===1){
 						playclip();
+						changeCell([x,y,z], 0xff00ff, -3 );
 						return -3;
 					}
 				}
