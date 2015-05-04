@@ -30,8 +30,8 @@ golCKRule2.rule = function(grid, x,y,z){
 				}
 			}
 		}*/
-		var voxel = new THREE.Mesh(cubette, new THREE.MeshColorFillMaterial(colors[2]));
-                            setObjPosition(voxel, [x,y,z]]);
+		var voxel = new THREE.Mesh(cubette, new THREE.MeshColorFillMaterial(0xf5f5f5));
+                            setObjPosition(voxel, [x,y,z]);
                             voxel.overdraw = true;
                             scene.addObject(voxel);
                             trail.push(voxel);
