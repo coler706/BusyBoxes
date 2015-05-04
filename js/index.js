@@ -4,6 +4,7 @@ var DEBUG2 = false;
 var CELL_TRAIL = false;
 var AVG_TRAIL = false;
 var avg_trail_a = [];
+var trail = [];
 var cell_trail_a = [];
 var cubette = new Cube(10, 10, 10);
 DEFAULT_COLOR = 0x8090aa;
