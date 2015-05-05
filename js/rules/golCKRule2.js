@@ -40,7 +40,7 @@ golCKRule2.rule = function(grid, x, y, z) {
                             scene.addObject(voxel);
                             cell_trail_a.push(voxel);
                             trailPos.push([x + i / 2, y + j / 2, z + k / 2]);
-                            console.log(trailPos.length + "");
+                            //console.log(trailPos.length + "");
                             if (cell_trail_a.length > 1000) {
                                 scene.removeObject(cell_trail_a[0]);
                                 cell_trail_a = cell_trail_a.splice(1);
@@ -58,7 +58,7 @@ golCKRule2.rule = function(grid, x, y, z) {
             scene.addObject(voxel);
             cell_trail_a.push(voxel);
             trailPos.push([x, y, z]);
-            console.log(trailPos.length + "");
+            //console.log(trailPos.length + "");
             if (cell_trail_a.length > 1000) {
                 scene.removeObject(cell_trail_a[0]);
                 cell_trail_a = cell_trail_a.splice(1);
