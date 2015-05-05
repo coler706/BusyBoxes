@@ -72,6 +72,7 @@ golCKRule2.rule = function(grid, x,y,z){
 				}
 			}
 		}
+		/*
 		for(var i = -1; i<= 1; i++){
 			for(var j = -1; j<= 1; j++){
 				for(var k = -1; k<= 1; k++){
@@ -82,7 +83,7 @@ golCKRule2.rule = function(grid, x,y,z){
 					}
 				}
 			}
-		}
+		}*/
 		return 0;
 	}
 	else if(grid.get(x,y,z)===-2){
