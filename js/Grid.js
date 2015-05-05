@@ -38,7 +38,7 @@ function Grid(x, y, z, mod_range, mode, state) {
 	this.put = function(x, y, z, cell_state) {
 		var key = "" + x + "," + y + "," + z;
 
-		if (cell_state == 1 || cell_state === -1|| cell_state === -2|| cell_state === -3|| cell_state === -4) {
+		if (cell_state == 1 || cell_state === -1|| cell_state === -2|| cell_state === -3|| cell_state === -4|| cell_state === -5) {
 			this.cells[key] = cell_state;
 			if (DEBUG) console.log("mission accomplished");
 			if (DEBUG) console.log("cell state: ", cell_state);

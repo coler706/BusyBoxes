@@ -710,7 +710,7 @@ function mainLoop(noRender) {
                         // console.log("DBG2 color POS_EVEN:", x, y, z, col);
                     }
                     if(coi==-2){
-                        col = 0x999991;
+                        col = NEG_EVEN;
                         // console.log("DBG2 color NEG_EVEN:", x, y, z, col);
                     }
                 }
@@ -1055,8 +1055,11 @@ function onDocumentKeyDown( event ) {
                 else if (newSta==-3){
                     liveCell(cursor, 0x551A8B, newSta );
                 }
-                else{
+                else if (newSta==-4){
                     liveCell(cursor, 0x397D02, newSta );
+                }
+                else{
+                    liveCell(cursor, 0x808080, newSta );
                 }
                 mainGrid.put(cursor[0],cursor[1],cursor[2], newSta);
             }
@@ -1400,6 +1403,7 @@ function updateHash(noLink) {
         else if (visual_and_numerical_grid[key]['state'] == -4) {
             keys_l.push(key);
         }
+
     	else {
     		console.log("ERROR -- state undefined:", key, visual_and_numerical_grid[key])
     		// alert("ERROR state != 1 | -1")
