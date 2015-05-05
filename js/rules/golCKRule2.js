@@ -35,7 +35,7 @@ golCKRule2.rule = function(grid, x,y,z){
 						var voxel = new THREE.Mesh(cubette, new THREE.MeshColorFillMaterial(0xf5f5f5));
                             setObjPosition(voxel, [x+i/2,y+j/2, z+k/2]);
                             voxel.overdraw = true;
-                            if(!containsObject([x+i/2,y+j/2, z+k/2],trailPos)){
+                            if(containsObject([x+i/2,y+j/2, z+k/2],trailPos)!=true){
 	                            scene.addObject(voxel);
 	                            cell_trail_a.push(voxel);
 	                            trailPos.push([x+i/2,y+j/2, z+k/2]);
@@ -53,7 +53,7 @@ golCKRule2.rule = function(grid, x,y,z){
 		var voxel = new THREE.Mesh(cubette, new THREE.MeshColorFillMaterial(0xf5f5f5));
                             setObjPosition(voxel, [x,y,z]);
                             voxel.overdraw = true;
-                            if(!containsObject([x,y z],trailPos)){
+                            if(containsObject([x,y z],trailPos)!=true){
 	                            scene.addObject(voxel);
 	                            cell_trail_a.push(voxel);
 	                            trailPos.push([x,y z]);
