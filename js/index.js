@@ -1648,6 +1648,7 @@ function toggleTrails() {
         }
         avg_trail_a = [];
         cell_trail_a = [];
+      	trailPos = [];
     }
     else {
         moodal("trail_type", function (result) {
