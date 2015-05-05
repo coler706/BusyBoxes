@@ -18,7 +18,7 @@ golCKRule2.trueMod = function(v, base) {
 function containsObject(obj, list) {
     var i;
     for (i = 0; i < list.length; i++) {
-        if (list[i] === obj) {
+        if (list[i][0] === obj[0] && list[i][1] === obj[1] && list[i][2] === obj[2]) {
             return true;
         }
     }
