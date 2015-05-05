@@ -57,7 +57,7 @@ golCKRule2.rule = function(grid, x, y, z) {
         if (containsObject([x, y, z], trailPos) != true) {
             scene.addObject(voxel);
             cell_trail_a.push(voxel);
-            trailPos.push([x, y z]);
+            trailPos.push([x, y, z]);
             console.log(trailPos.length + "");
             if (cell_trail_a.length > 1000) {
                 scene.removeObject(cell_trail_a[0]);
