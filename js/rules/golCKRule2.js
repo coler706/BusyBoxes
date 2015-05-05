@@ -36,16 +36,18 @@ golCKRule2.rule = function(grid, x, y, z) {
                         var voxel = new THREE.Mesh(cubette, new THREE.MeshColorFillMaterial(0xf5f5f5));
                         setObjPosition(voxel, [x + i / 2, y + j / 2, z + k / 2]);
                         voxel.overdraw = true;
-                        if (containsObject([x + i / 2, y + j / 2, z + k / 2], trailPos) != true) {
-                            scene.addObject(voxel);
-                            cell_trail_a.push(voxel);
-                            trailPos.push([x + i / 2, y + j / 2, z + k / 2]);
-                            console.log(trailPos.length + "");
-                            if (cell_trail_a.length > 1000) {
-                                scene.removeObject(cell_trail_a[0]);
-                                cell_trail_a = cell_trail_a.splice(1);
-                                trailPos = trailPos.splice(1);
-                            }
+                        if(CELL_TRAIL){
+	                        if (containsObject([x + i / 2, y + j / 2, z + k / 2], trailPos) != true) {
+	                            scene.addObject(voxel);
+	                            cell_trail_a.push(voxel);
+	                            trailPos.push([x + i / 2, y + j / 2, z + k / 2]);
+	                            console.log(trailPos.length + "");
+	                            if (cell_trail_a.length > CELL_TRAIL) {
+	                                scene.removeObject(cell_trail_a[0]);
+	                                cell_trail_a = cell_trail_a.splice(1);
+	                                trailPos = trailPos.splice(1);
+	                            }
+	                        }
                         }
                     }
                 }
@@ -54,16 +56,18 @@ golCKRule2.rule = function(grid, x, y, z) {
         var voxel = new THREE.Mesh(cubette, new THREE.MeshColorFillMaterial(0xf5f5f5));
         setObjPosition(voxel, [x, y, z]);
         voxel.overdraw = true;
-        if (containsObject([x, y, z], trailPos) != true) {
-            scene.addObject(voxel);
-            cell_trail_a.push(voxel);
-            trailPos.push([x, y, z]);
-            console.log(trailPos.length + "");
-            if (cell_trail_a.length > 1000) {
-                scene.removeObject(cell_trail_a[0]);
-                cell_trail_a = cell_trail_a.splice(1);
-                trailPos = trailPos.splice(1);
-            }
+        if(CELL_TRAIL){
+	        if (containsObject([x, y, z], trailPos) != true) {
+	            scene.addObject(voxel);
+	            cell_trail_a.push(voxel);
+	            trailPos.push([x, y, z]);
+	            console.log(trailPos.length + "");
+	            if (cell_trail_a.length > CELL_TRAIL) {
+	                scene.removeObject(cell_trail_a[0]);
+	                cell_trail_a = cell_trail_a.splice(1);
+	                trailPos = trailPos.splice(1);
+	            }
+	        }
         }
         return -1;
     } else if (grid.get(x, y, z) === -1) {
