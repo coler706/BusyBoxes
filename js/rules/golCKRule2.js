@@ -76,7 +76,7 @@ golCKRule2.rule = function(grid, x,y,z){
 			for(var j = -1; j<= 1; j++){
 				for(var k = -1; k<= 1; k++){
 					if((i!=0 || j!=0 || k!=0)&((Math.abs(i)+Math.abs(j)+Math.abs(k))==1) && grid.get(x+i,y+j, z+k)===1){
-						if(g(grid.get(x-i,y-j, z-k)===-1||grid.get(x-i,y-j, z-k)===-2)&&(grid.get(x-i,y-j, z-k)===1||grid.get(x-i,y-j, z-k)===-2||grid.get(x-i,y-j, z-k)===-4)){
+						if((grid.get(x+i*2,y+j*2, z+k*2)===-1||grid.get(x+i*2,y+j*2, z+k*2)===-2)&&(grid.get(x-i,y-j, z-k)===1||grid.get(x-i,y-j, z-k)===-2||grid.get(x-i,y-j, z-k)===-4)){
 							return 1;
 						}
 					}
