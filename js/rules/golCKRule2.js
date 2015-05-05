@@ -35,12 +35,14 @@ golCKRule2.rule = function(grid, x,y,z){
 						var voxel = new THREE.Mesh(cubette, new THREE.MeshColorFillMaterial(0xf5f5f5));
                             setObjPosition(voxel, [x+i/2,y+j/2, z+k/2]);
                             voxel.overdraw = true;
-                            if(true){
+                            if(!containsObject([x+i/2,y+j/2, z+k/2],trailPos)){
 	                            scene.addObject(voxel);
 	                            cell_trail_a.push(voxel);
+	                            trailPos.push([x+i/2,y+j/2, z+k/2]);
 	                            if (cell_trail_a.length > 1000) {
 	                                scene.removeObject(cell_trail_a[0]);
 	                                cell_trail_a = cell_trail_a.splice(1);
+	                                trailPos = trailPos.splice(1);
 	                            }
 	                        }
 					}
@@ -50,12 +52,14 @@ golCKRule2.rule = function(grid, x,y,z){
 		var voxel = new THREE.Mesh(cubette, new THREE.MeshColorFillMaterial(0xf5f5f5));
                             setObjPosition(voxel, [x,y,z]);
                             voxel.overdraw = true;
-                            if(true){
+                            if(!containsObject([x,y z],trailPos)){
 	                            scene.addObject(voxel);
 	                            cell_trail_a.push(voxel);
+	                            trailPos.push([x,y z]);
 	                            if (cell_trail_a.length > 1000) {
 	                                scene.removeObject(cell_trail_a[0]);
 	                                cell_trail_a = cell_trail_a.splice(1);
+	                                trailPos = trailPos.splice(1);
 	                            }
 	                        }
 		return -1;
