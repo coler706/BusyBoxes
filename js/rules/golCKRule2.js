@@ -110,6 +110,7 @@ golCKRule2.rule = function(grid, x, y, z) {
         }
         return retu;
     } else if (grid.get(x, y, z) === -3) {
+    	html5audio.pause();
         changeCell([x, y, z], 0x551A8B, -3);
         for (var i = -1; i <= 1; i++) {
             for (var j = -1; j <= 1; j++) {
