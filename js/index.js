@@ -179,7 +179,8 @@ function parseQueryArgs() {
     return queryArgs;
 }
 function playclip(){
-    //html5audio.pause()
+    html5audio.pause()
+    html5audio.time=0;
     html5audio.play()
 }
 function init() {
