@@ -55,6 +55,27 @@
 }
 .config-dropdown-open{
 }
+.nudgeA{
+  cursor: pointer;
+  background-color: #e6e6e6;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  border-bottom: solid 2px #e6e6e6;
+  display:inline-block;
+  width:137px;
+}
+.nudgeB{
+  cursor: pointer;
+  background-color: #e6e6e6;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  border-bottom: solid 2px #e6e6e6;
+  display:inline-block;
+  width:137px;
+}
+.nudgeA:active, .nudgeB:active{
+  background-color: white;
+}
 
 .dropdown-open{
   cursor: pointer;

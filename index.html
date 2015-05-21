@@ -33,6 +33,7 @@
       <link rel="stylesheet" type="text/css" href="css/instructionPopUp.css"></link>
       
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" ></script>
+      <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
       <script src="js/bootstrap.min.js"></script>
       <script src="js/encdec.js" ></script>
@@ -83,6 +84,7 @@
             <button class="bannerButtons btn btn-default" onclick="toggleTrails()">TRAILS</button>
             <button class="bannerButtons btn btn-default" onclick="clearGrid()">CLEAR</button>
             <button class="bannerButtons btn btn-default" onclick="update()">UPDATE HASH</button>
+            <button class="bannerButtons btn btn-default" onclick="share()">SHARE HASH</button>
             <button class="bannerButtons btn btn-default" onclick="reset()">RESET</button>
             <!-- <button class="bannerButtons btn btn-default toggle-background">!</button> -->
             <button class="bannerButtons btn btn-default" data-toggle="modal" data-target="#controls">?</button>
@@ -141,6 +143,7 @@
                 <li><a href="?rule=rule3D3state">3D 3-state rule</a></li>
                 <li><a href="?rule=golCKRule">3D 4-state cole rule</a></li>
                 <li><a href="?rule=golCKRule2">3D 7-state cole rule</a></li>
+                <li><a href="?rule=rule2D3state2">2D 5-state cole rule</a></li>
             </ul>
           
             <!-- CONFIGURATION DROP DOWN -->
@@ -210,7 +213,9 @@
               
               <li><a href="#" onclick="selectHash('RZejhMkpklOTtLA0', this, 40, 250)" id="circular">Circular Motion</a></li>
 
-            </ul>            
+            </ul>
+            <div type="button" class="nudgeA">Nudge Node A</div>
+            <div type="button" class="nudgeB">Nudge Node B</div>  
           </div>
 
         <div id="canvas-container">
@@ -218,6 +223,7 @@
 
         <script type="text/javascript" src="js/ThreeCanvas.js"></script>
         <script type="text/javascript" src="js/Cube.js"></script>
+        <script type="text/javascript" src="js/Pyramid.js"></script>
         <script type="text/javascript" src="js/Plane.js"></script>
         <script type="text/javascript" src="js/encdec.js"></script>
         <script type="text/javascript" src="js/moodal.js"></script>
@@ -234,6 +240,7 @@
         <!-- new 3 state rules -->
         <script type="text/javascript" src="js/rules/rule3D3state.js"></script>
         <script type="text/javascript" src="js/rules/rule2D3state.js"></script>
+        <script type="text/javascript" src="js/rules/rule2D3state2.js"></script>
         <script type="text/javascript" src="js/rules/golCKRule.js"></script>
         <script type="text/javascript" src="js/rules/golCKRule2.js"></script>
         

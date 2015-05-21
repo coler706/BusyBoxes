@@ -1,4 +1,34 @@
 //<![CDATA[
+var htmlForPath = {};
+var worldListRef = new Firebase('https://lyfecraft.firebaseio.com/');
+ var worldListView = worldListRef.limitToLast(100);
+ function handleScoreAdded(scoreSnapshot, prevScoreName) {
+    var newScoreRow = $("<tr/>");
+    newScoreRow.append($("<td/>").append($("<em/>").text(scoreSnapshot.val().name)));
+    newScoreRow.append($("<td/>").text(scoreSnapshot.val().score));
+
+    // Store a reference to the table row so we can get it again later.
+    htmlForPath[scoreSnapshot.key()] = newScoreRow;
+
+    // Insert the new score in the appropriate place in the table.
+      $(".config-dropdown").addChild(newScoreRow);
+  }
+  worldListView.on('child_added', function (newScoreSnapshot, prevScoreName) {
+    handleScoreAdded(newScoreSnapshot, prevScoreName);
+  });
+
+  // Add a callback to handle when a score is removed
+  worldListView.on('child_removed', function (oldScoreSnapshot) {
+    handleScoreRemoved(oldScoreSnapshot);
+  });
+
+  // Add a callback to handle when a score changes or moves positions.
+  var changedCallback = function (scoreSnapshot, prevScoreName) {
+    handleScoreRemoved(scoreSnapshot);
+    handleScoreAdded(scoreSnapshot, prevScoreName);
+  };
+  worldListView.on('child_moved', changedCallback);
+  worldListView.on('child_changed', changedCallback);
 var DEBUG = false;
 var DEBUG2 = false;
 var CELL_TRAIL = false;
@@ -6,13 +36,33 @@ var AVG_TRAIL = false;
 var avg_trail_a = [];
 var trailPos = [];
 var cell_trail_a = [];
+var cell_glow = [];
 var cubette = new Cube(25, 25, 25);
+var glow = new Cube(55, 55, 55);
 DEFAULT_COLOR = 0x8090aa;
 POS_EVEN = 0xff3333;
 POS_ODD = 0x3333ff;
 NEG_EVEN = 0xffcc00;
 NEG_ODD = 0x00ccff;
 
+var nudgeObject = 0;
+$(".nudgeA").mousedown(function() {
+    nudgeObject = 1;
+}).mouseup(function() {
+    nudgeObject = 0;  
+});
+$(".nudgeA").mouseout(function() {
+    nudgeObject=0;
+});
+
+$(".nudgeB").mousedown(function() {
+    nudgeObject = 2;
+}).mouseup(function() {
+    nudgeObject = 0;  
+});
+$(".nudgeB").mouseout(function() {
+    nudgeObject=0;
+});
 
 // adding these to a cell's coords gives you its knight-move bretheren
 // var offs1 = [+2, +1, -1, -2, +2, +1, -1, -2];
@@ -67,6 +117,8 @@ var rules = [];
 
 
 var cursor = [0, 0, 0];
+var selectionA = [0, 0, 0];
+var selectionB = [0, 0, 0];
 var gLastCursor = cursor;
 var visual_and_numerical_grid = {};
 IS_RUNNING = false;
@@ -97,7 +149,7 @@ camera, scene, renderer,
 projector, plane, cube, linesMaterial,
 color = 0,colors = [ 0xDF1F1F, 0xDFAF1F, 0x80DF1F, 0x1FDF50, 0x1FDFDF, 0x1F4FDF, 0x7F1FDF, 0xDF1FAF, 0xEFEFEF, 0x303030 ],
 // minusColor = 0, minusColors = [0x4e9258,0xffff00 ],
-ray, brush, objectHovered,
+ray, brush,nodeA,nodeB,selectionBox, objectHovered,
 isMouseDown = false, onMouseDownPosition,
 radius = 2000, theta = 0, onMouseDownTheta = 45, phi = 60, onMouseDownPhi = 60;
 randWidth = 4, randCount = 33, randRatio = 0.5;
@@ -309,6 +361,39 @@ bugg = 1000;
             scene.addObject(line);
 
     }
+    if (qargs.triangles) {
+        for (var i = 0; i <= axisMax - axisMin + 1; i++) {
+        
+            var line = new THREE.Line(geometry, linesMaterial);
+            line.position.z = (i * 50*Math.sin(60 * Math.PI / 180)) + axisMin * 50*Math.sin(60 * Math.PI / 180);
+            scene.addObject(line);
+            
+            var line = new THREE.Line(geometry, linesMaterial);
+            line.position.x = (i * 50) + axisMin * 50;
+            line.rotation.y = 60 * Math.PI / 180;
+            scene.addObject(line);
+
+            var line = new THREE.Line(geometry, linesMaterial);
+            line.position.x = -((i * 50) + axisMin * 50);
+            line.rotation.y = -60 * Math.PI / 180;
+            scene.addObject(line);
+            
+        }
+            //var line = new THREE.Line(geometry, linesMaterial);
+            //((axisMax - axisMin)/2 * 50) + axisMin * 50
+            var line = new THREE.Line(geometry, zLineMaterial);
+            line.position.z = 0;
+            scene.addObject(line);
+
+            var line = new THREE.Line(vertical, yLineMaterial);
+            scene.addObject(line);
+
+            var line = new THREE.Line(geometry, xLineMaterial);
+            line.position.x = 0;
+            line.rotation.y = 90 * Math.PI / 180;
+            scene.addObject(line);
+
+    }
     
     
     projector = new THREE.Projector();
@@ -332,6 +417,18 @@ bugg = 1000;
     else {
         cube = new Cube( boxDim, boxDim, boxDim );
     }
+    if (qargs.triangles) {
+        if (qargs.dim == 2) {
+          
+            //So we use Squares instead of cubes!
+            cube = new Triangle( boxDim, boxDim, boxDim);
+            phi = 180;
+            adjustCamera();
+        }
+        else {
+            cube = new Pyramid( boxDim, boxDim, boxDim );
+        }
+    }
     
     
     
@@ -352,10 +449,22 @@ bugg = 1000;
 
     // this is the cursor that shows where you are going to create a cube
     brush = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ color ], 0.4 ) );
+    nodeA = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ color ], 0.4 ) );
+    nodeB = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ color ], 0.4 ) );
+    selectionBox = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ color ], 0.4 ) );
     //brush.position.y = brushY;
     setObjPosition(brush, cursor);
+    setObjPosition(nodeA, selectionA);
+    setObjPosition(nodeB, selectionB);
+    setObjPosition(selectionBox, selectionA);
     brush.overdraw = true;
+    nodeA.overdraw = true;
+    nodeB.overdraw = true;
+    selectionBox.overdraw = true;
     scene.addObject( brush );
+    scene.addObject( nodeA );
+    scene.addObject( nodeB );
+    scene.addObject( selectionBox );
 
     onMouseDownPosition = new THREE.Vector2();
 
@@ -462,7 +571,24 @@ bugg = 1000;
     }
 }
 //end of init function
+function moveNode(nodeToMove,xyz){
+    if(nodeToMove==brush){
+        clampCursor();
+        setBrushPosition(xyz);
+    }
+    if(nodeToMove==nodeA){
+        setNodeAPosition(xyz);
+    }
+    if(nodeToMove==nodeB){
+        setNodeBPosition(xyz);
+    }
+    scene.removeObject(selectionBox);
+    selectionBox = new THREE.Mesh( new Cube( Math.abs(selectionA[0]-selectionB[0])*50+50, Math.abs(selectionA[1]-selectionB[1])*50+50, Math.abs(selectionA[2]-selectionB[2])*50+50), new THREE.MeshColorFillMaterial( colors[ color ], 0.4 ) );
+    setObjPosition(selectionBox, [selectionB[0]/2+selectionA[0]/2,selectionB[1]/2+selectionA[1]/2,selectionB[2]/2+selectionA[2]/2]);
 
+    
+    scene.addObject(selectionBox);
+}
 
 
 function mainLoopFast() {
@@ -790,6 +916,14 @@ function setBrushPosition(xyz) {
     }
     document.getElementById("cursorpos").innerHTML = xyz[0] + "," + xyz[1] + "," + xyz[2]
 }
+function setNodeAPosition(xyz) {
+    setObjPosition(nodeA, xyz);
+    document.getElementById("cursorpos").innerHTML = xyz[0] + "," + xyz[1] + "," + xyz[2]
+}
+function setNodeBPosition(xyz) {
+    setObjPosition(nodeB, xyz);
+    document.getElementById("cursorpos").innerHTML = xyz[0] + "," + xyz[1] + "," + xyz[2]
+}
 
 // this is the visual grid
 // grid actually has visual things
@@ -867,6 +1001,7 @@ function onDocumentKeyDown( event ) {
     }
 //document.getElementById("debug").innerHTML = ''+event.keyCode;
 // console.log("key:", event.keyCode);
+
     if (event.shiftKey || event.ctrlKey || event.altKey || event.altGraphKey) return;
     
     // THIS is the navigation interface
@@ -875,53 +1010,49 @@ function onDocumentKeyDown( event ) {
     var xChan = 1 * Math.cos( theta * Math.PI / 360 );
     var field = (cursor[0] ^ cursor[1] ^ cursor[2]) & 1;
     if (DEBUG) console.log("FIELD:", field);
+    var theNodeBrush=[brush,nodeA,nodeB][nudgeObject];
+    var theNodePosition=[cursor,selectionA,selectionB][nudgeObject];
     switch( event.keyCode ) {
         case 37:                           // LEFT
-            event.preventDefault();
-            cursor[2]+=Math.round(yChan);
-            cursor[0]-=Math.round(xChan);
-            clampCursor();
-            setBrushPosition(cursor);
+        event.preventDefault();
+            theNodePosition[2]+=Math.round(yChan);
+            theNodePosition[0]-=Math.round(xChan);
+            moveNode(theNodeBrush,theNodePosition);
             render(); 
             break;
         case 40:                           // DOWN
             event.preventDefault();
-            cursor[2]-=Math.round(xChan);
-            cursor[0]-=Math.round(yChan);
-            clampCursor();
-            setBrushPosition(cursor);
+            theNodePosition[2]-=Math.round(xChan);
+            theNodePosition[0]-=Math.round(yChan);
+            moveNode(theNodeBrush,theNodePosition);
             render(); 
             break;
         case 39:                           // RIGHT
             event.preventDefault();
-            cursor[2]-=Math.round(yChan);
-            cursor[0]+=Math.round(xChan);
-            clampCursor();
-            setBrushPosition(cursor);
+            theNodePosition[2]-=Math.round(yChan);
+            theNodePosition[0]+=Math.round(xChan);
+            moveNode(theNodeBrush,theNodePosition);
             render(); 
             break;
         case 38:                           // UP
             event.preventDefault();
-            cursor[2]+=Math.round(xChan);
-            cursor[0]+=Math.round(yChan);
-            clampCursor();
-            setBrushPosition(cursor);
+            theNodePosition[2]+=Math.round(xChan);
+            theNodePosition[0]+=Math.round(yChan);
+            moveNode(theNodeBrush,theNodePosition);
             render(); 
             break;
         case 81:                           // Q
         case 33:                           // Page Up
             event.preventDefault();
-            cursor[1]++;
-            clampCursor();
-            setBrushPosition(cursor);
+            theNodePosition[1]++;
+            moveNode(theNodeBrush,theNodePosition);
             render(); 
             break;
         case 90:                           // Z
         case 34:                           // Page Down
             event.preventDefault();
-            cursor[1]--;
-            clampCursor();
-            setBrushPosition(cursor);
+            theNodePosition[1]--;
+            moveNode(theNodeBrush,theNodePosition);
             render(); 
             break;
         case 82:                           // R
@@ -1442,6 +1573,8 @@ function updateHash(noLink) {
     if (!noLink) {                          // yuck. The part of my job I hate
         gUpdateHash = data;
     }
+
+      
     if (data != lasthash) {
         if (data == gInitialHash) {
             document.getElementById("duplicates").innerHTML = "cycle: " + Math.abs(frame - gInitialFrame) + " match: frame " + frame + "=" + gInitialFrame;
@@ -1461,7 +1594,31 @@ function updateHash(noLink) {
     document.getElementById('showhash').innerHTML = data;
     // if (qargs.science == true && typeof(console) != "undefined" && console.log) console.log(''+coords)
 }
+function share(){
+    updateHash();
 
+    var name =prompt("world name?")
+    var userScoreRef = worldListRef.child(name)
+
+      // Use setWithPriority to put the name / score in Firebase, and set the priority to be the score.
+      userScoreRef.set({ name:name, hash:gUpdateHash });
+}
+function handleScoreAdded(scoreSnapshot, prevScoreName) {
+    var newScoreRow = $("<li/>");
+    newScoreRow.append($('<a href="#" onclick="selectHash(\''+scoreSnapshot.val().hash+'\', this)" id="circular">'+scoreSnapshot.val().name+'</a>'));
+
+    // Store a reference to the table row so we can get it again later.
+    htmlForPath[scoreSnapshot.key()] = newScoreRow;
+
+    // Insert the new score in the appropriate place in the table.
+    if (prevScoreName === null) {
+      $(".config-dropdown").append(newScoreRow);
+    }
+    else {
+      var lowerScoreRow = htmlForPath[prevScoreName];
+      lowerScoreRow.before(newScoreRow);
+    }
+  }
 function render() {
     renderer.render( scene, camera );
 }

@@ -37,7 +37,7 @@ golCKRule2.rule = function(grid, x, y, z) {
                         setObjPosition(voxel, [x + i / 2, y + j / 2, z + k / 2]);
                         voxel.overdraw = true;
                         if(CELL_TRAIL){
-	                        if (containsObject([x + i / 2, y + j / 2, z + k / 2], trailPos) != true) {
+	                        if (true){//containsObject([x + i / 2, y + j / 2, z + k / 2], trailPos) != true) {
 	                            scene.addObject(voxel);
 	                            cell_trail_a.push(voxel);
 	                            trailPos.push([x + i / 2, y + j / 2, z + k / 2]);
