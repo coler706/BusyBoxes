@@ -918,11 +918,11 @@ function setBrushPosition(xyz) {
 }
 function setNodeAPosition(xyz) {
     setObjPosition(nodeA, xyz);
-    document.getElementById("cursorpos").innerHTML = xyz[0] + "," + xyz[1] + "," + xyz[2]
+    //document.getElementById("cursorpos").innerHTML = xyz[0] + "," + xyz[1] + "," + xyz[2]
 }
 function setNodeBPosition(xyz) {
     setObjPosition(nodeB, xyz);
-    document.getElementById("cursorpos").innerHTML = xyz[0] + "," + xyz[1] + "," + xyz[2]
+    //document.getElementById("cursorpos").innerHTML = xyz[0] + "," + xyz[1] + "," + xyz[2]
 }
 
 // this is the visual grid
@@ -1736,6 +1736,9 @@ function randomCells(){
         if(qargs.dim==2){
             axMax[1]=0;
             axMin[1]=0;
+            count=width*width/100*count
+        }else{
+        	count=width*width*width/100*count	
         }
         clearScreen();
         if (lastSelectedEl) 
