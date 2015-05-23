@@ -130,7 +130,7 @@ var lasthash2 = "";
 var gUpdateHash2 = "";
 var gInitialHash2 = "";
 var gInitialFrame;
-var encodeString = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
+var encodeString = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-αβξδεφγηιςκλμνοπθρστωχψζ";
 var frame = 0; //
 var cellCount = 0;
 var mode = "wrap";
@@ -449,8 +449,8 @@ bugg = 1000;
 
     // this is the cursor that shows where you are going to create a cube
     brush = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ color ], 0.4 ) );
-    nodeA = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ color ], 0.4 ) );
-    nodeB = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ color ], 0.4 ) );
+    nodeA = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( 0xffff00, 0.4 ) );
+    nodeB = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( "blue", 0.4 ) );
     selectionBox = new THREE.Mesh( cube, new THREE.MeshColorFillMaterial( colors[ color ], 0.4 ) );
     //brush.position.y = brushY;
     setObjPosition(brush, cursor);
@@ -583,7 +583,7 @@ function moveNode(nodeToMove,xyz){
         setNodeBPosition(xyz);
     }
     scene.removeObject(selectionBox);
-    selectionBox = new THREE.Mesh( new Cube( Math.abs(selectionA[0]-selectionB[0])*50+50, Math.abs(selectionA[1]-selectionB[1])*50+50, Math.abs(selectionA[2]-selectionB[2])*50+50), new THREE.MeshColorFillMaterial( colors[ color ], 0.4 ) );
+    selectionBox = new THREE.Mesh( new Cube( Math.abs(selectionA[0]-selectionB[0])*50+50, Math.abs(selectionA[1]-selectionB[1])*50+50, Math.abs(selectionA[2]-selectionB[2])*50+50), new THREE.MeshColorFillMaterial( 0xffffff, 0.4 ) );
     setObjPosition(selectionBox, [selectionB[0]/2+selectionA[0]/2,selectionB[1]/2+selectionA[1]/2,selectionB[2]/2+selectionA[2]/2]);
 
     
@@ -1736,6 +1736,9 @@ function randomCells(){
         if(qargs.dim==2){
             axMax[1]=0;
             axMin[1]=0;
+            count = (width*width)/100*count
+        }else{
+            count = (width*width*width)/100*count
         }
         clearScreen();
         if (lastSelectedEl) 
