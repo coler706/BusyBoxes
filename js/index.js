@@ -131,6 +131,8 @@ var gUpdateHash2 = "";
 var gInitialHash2 = "";
 var gInitialFrame;
 var encodeString = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-αβξδεφγηιςκλμνοπθρστωχψζ";
+var extraChars="Ⓐⓐ⒜AaẠạÅåÄäẢảḀḁẤấẦầẨẩȂȃẪẫẬậẮắẰằẲẳẴẵẶặĀāĄąȀȁǺǻȦȧÁáǞǟǍǎÀàÃãǠǡÂâȺⱥÆæǢǣǼǽⱯꜲꜳꜸꜹꜺꜻⱭ℀⅍℁ªⒷⓑ⒝BbḂḃḄḅḆḇƁɃƀƂƃƄƅℬⒸⓒ⒞CcḈḉĆćĈĉĊċČčÇçƇƈȻȼℂ℃ƆꜾꜿℭ℅℆℄Ⓓⓓ⒟DdḊḋḌḍḎḏḐḑḒḓĎďƊƋƌƉĐđȡǱǲǳǄǅǆȸⅅⅆⒺⓔ⒠EeḔḕḖḗḘḙḚḛḜḝẸẹẺẻẾếẼẽỀềỂểỄễỆệĒēĔĕĖėĘęĚěÈèÉéÊêËëȄȅȨȩȆȇƎⱻɆɇƏǝℰⱸℯ℮ℇƐⒻⓕ⒡FfḞḟƑƒꜰℲⅎꟻℱ℻Ⓖⓖ⒢GgƓḠḡĜĝĞğĠġǤǥǦǧǴℊ⅁ǵĢģⒽⓗ⒣HhḢḣḤḥḦḧḨḩḪḫĤĥȞȟĦħⱧⱨꜦℍǶẖℏℎℋℌꜧⒾⓘ⒤IiḬḭḮḯĲĳÍíÌìÎîÏïĨĩĪīĬĭĮįǏǐıƚỺⅈⅉℹℑℐⒿⓙ⒥JjĴĵɈɉȷⱼǰⓀⓚ⒦KkḰḱḲḳḴḵĶķƘƙꝀꝁꝂꝃꝄꝅǨǩⱩⱪĸⓁⓛ⒧LlḶḷḸḹḺḻḼḽĹĺĻļĽľĿŀŁłỈỉⱠⱡȽꝉꝈⱢǇǈǉỊİịꞁ⅃⅂ȈȉȊȋℓℒⓂⓜ⒨MmḾḿṀṁṂṃꟿꟽⱮƜℳⓃⓝ⒩NnṄṅṆṇṈṉṊṋŃńŅņŇňǸǹÑñȠƞŊŋƝŉǊǋǌȵℕ№Ⓞⓞ⒪OoÖöṎṏṌṍṐṑṒṓȪȫȬȭȮȯȰȱǪǫǬǭỌọỎỏỐốỒồỔổỖỗỘộỚớỜờỞởỠỡỢợƠơŌōŎŏŐőÒòÓóÔôÕõǑǒȌȍȎȏŒœØøǾǿꝊꝎꝏ⍥⍤ℴⓅⓟ⒫℗PpṔṕṖṗƤƥⱣℙǷꟼ℘Ⓠⓠ⒬QqɊɋℚ℺ȹⓇⓡ⒭RrŔŕŖŗŘřṘṙṚṛṜṝṞṟȐȑȒȓɌɍƦꝚꝛⱤ℞ℜℛ℟ℝⓈⓢ⒮SsṠṡṢṣṤṥṦṧṨṩŚśŜŝŞşŠšȘșȿꜱƧƨϨϩẞßẛẜẝ℠Ⓣⓣ⒯TtṪṫṬṭṮṯṰṱŢţŤťŦŧȚțȾⱦƬƮƫƭẗȶ℡™Ⓤⓤ⒰UuṲṳṴṵṶṷṸṹṺṻỦủỤụỨứỪừỬửỮữỰựŨũŪūŬŭŮůŰűǙǚǗǘǛǜŲųǓǔȔȕÛûȖȗÙùÚúÜüƯưɄƲƱⓋⓥ⒱VvṼṽṾṿɅ℣ỼⱱⱴⱽⓌⓦ⒲WwẀẁẂẃẄẅẆẇẈẉŴŵⱲⱳϢϣẘⓍⓧ⒳XxẊẋẌẍℵ×Ⓨⓨ⒴yYẎẏỾỿỲỳỴỵỶỷỸỹŶŷƳƴŸÿÝýɎɏȲȳƔẙ⅄ℽⓏⓩ⒵ZzẐẑẒẓẔẕŹźŻżŽžȤȥⱫⱬƵƶɀℨℤ"
+
 var frame = 0; //
 var cellCount = 0;
 var mode = "wrap";
@@ -155,7 +157,7 @@ radius = 2000, theta = 0, onMouseDownTheta = 45, phi = 60, onMouseDownPhi = 60;
 randWidth = 4, randCount = 33, randRatio = 0.5;
 
 var mainGrid;
-mainGrid = new Grid(24, 24, 24); //FIXME TODO: set size acc to qargs
+mainGrid = new Grid(64, 64, 64); //FIXME TODO: set size acc to qargs
 var gThreeInUse = [];
 var gThreeUnused = [];
 var html5audio=document.getElementById("audio");
@@ -1514,7 +1516,7 @@ function updateHash(noLink) {
         var xyz = eval("[" + key + "]");
         var outOfBounds = false;
         for (i=0; i<3; i++) {
-            if (xyz[i] > axisMax || xyz[i] < axisMin || xyz[i] > 12 || xyz[i] < -12) {
+            if (xyz[i] > axisMax || xyz[i] < axisMin || xyz[i] > 24 || xyz[i] < -24) {
                 outOfBounds = true;
                 break;
             }
@@ -1770,13 +1772,15 @@ function randomCells(){
 // https://gist.github.com/665235
 function decode( string ) {
     var output = [];
-    var removeFir=string.substring(1,string.length).split('');
-    string.split('').forEach( function ( v ) { output.push( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf( v)-26 ); } );
+    var removeFir=string.split('');
+    string.split('').forEach( function ( v ) { output.push( encodeString.indexOf( v)-24 ); } );
+    console.log(output)
     return output;//encdec_decode(string);
 }
 function encode( array ) {
     var output = "";
-    array.forEach( function ( v ) { output += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt( v+26 ); } );
+    array.forEach( function ( v ) { output += encodeString.charAt( v+24 ); } );
+    console.log(output)
     return output;//encdec_encode(array);
 }
 function fastSlow() {

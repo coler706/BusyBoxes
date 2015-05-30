@@ -1,102 +1,107 @@
 /*
- * A new three state rule
+ * implements the BusyBoxes reversible CA as outlined here:
+ * http://arxiv.org/abs/1206.2060
  */
 
 rule2D3state2 = {}
 
-rule2D3state2.STATES = 5;
+rule2D3state2.STATES=3;
 
-rule2D3state2.vector = function(x, y, z){
-	return {x:x, y:y, z:z};
-};
+rule2D3state2.rule = function(grid, x, y, z, frm) {
+	var offx, offy, offz, swpx, swpy, swpz;
+	var coi = grid.get(x, y, z);
+	if ((x + y + z & 1) != (frm & 1)) return coi; 								// only process if field parity is correct
 
-rule2D3state2.add = function(oldVector, x, y, z) {
-	return rule2D3state.vector(oldVector.x + x, oldVector.y + y, oldVector.z + z);
-};
-
-rule2D3state2.get = function(grid, getLocation) {
-	return grid.get(getLocation.x, getLocation.y, getLocation.z);
-};
-
-rule2D3state2.rule = function(grid, x,y,z, frame, direction){
-	// if ((frame+x+y+z) % 2 === 0)
-		// return;
-	if ((x + y + z & 1) != (frame & 1)) return; 								// only process if field parity is correct
-
-	var rotatorFound = false;
-	var rotatorLocation;
-	var deltaFromMeToRotatorLocation;
-
-	var possibleGuysToRotateMe = [
-		rule2D3state2.vector(+1, 0, 0),
-		rule2D3state2.vector(-1, 0, 0),
-		rule2D3state2.vector(0, 0, +1),
-		rule2D3state2.vector(0, 0, -1)
-	];
-
-	for (index in possibleGuysToRotateMe) {
-		var possibleGuyToRotateMe = possibleGuysToRotateMe[index];
-
-		if (rule2D3state2.get(grid, rule2D3state2.add(possibleGuyToRotateMe, x,y,z)) !== 0) {
-			if (rotatorFound) {
-				return;
+	function getSwap(x, y, z) {													// return valid swap offset or null if there is contention
+		var swapx = null, swapy = null;
+		for (var i=0; i<8; i++) {
+			var xx = x+offx[i];
+			var yy = y;
+			var zz = z+offz[i];
+			if (grid.get(xx, yy, zz)) {
+				if ((swapx != null) && (swapx != swpx[i] || swapz != swpz[i]) ) { // swap confict, forgeddaboudit
+					return null;
+				}
+				swapx = swpx[i];
+				swapy = swpy[i];
+				swapz = swpz[i];
 			}
-
-			rotatorLocation = rule2D3state2.add(possibleGuyToRotateMe, x,y,z);
-			deltaFromMeToRotatorLocation = possibleGuyToRotateMe;
-			rotatorFound = true;
 		}
+		if (swapx == null) return null;
+		return [swapx, swapy, swapz];
 	}
 
-	if (!rotatorFound) {
-		return;
+	function onePlane() {														// process one of 3 planes dep on phase
+		var swap = getSwap(x, y, z);											// proposed swap cell as delta from xyz
+		if (swap != null) {														// if valid (no immediate conflicts)
+			var swapper = grid.get(x+swap[0], y, z+swap[2]);   			// get state at swap cell
+			if (swapper != coi) {												// if state is different from ours, we might swap
+				var revswap = getSwap(x+swap[0], y, z+swap[2]);			// proposed swap for swap cell
+				if (revswap != null) {
+					if ( (swap[0] + revswap[0] == 0) &&							// if it matches (mutual proposed swaps), do this thing
+						 (swap[2] + revswap[2] == 0)) {							// we return his state; he will return ours.
+						return swapper;											// That's what we call a swap, Scooby Doo
+					}
+				}
+			}
+		}
+		return coi;
 	}
 	
-	var spacesThatNeedToBeEmpty = [
-		rule2D3state2.add(rotatorLocation, 2, 0, 0),
-		rule2D3state2.add(rotatorLocation, -2, 0, 0),
-		rule2D3state2.add(rotatorLocation, 0, 0, 2),
-		rule2D3state2.add(rotatorLocation, 0, 0, -2),
-		rule2D3state2.add(rotatorLocation, 1, 0, 1),
-		rule2D3state2.add(rotatorLocation, -1, 0, -1),
-		rule2D3state2.add(rotatorLocation, 1, 0, -1),
-		rule2D3state2.add(rotatorLocation, -1, 0, 1)
-	];
-
-	for (var index in spacesThatNeedToBeEmpty) {
-		var spaceThatNeedsToBeEmpty = spacesThatNeedToBeEmpty[index]
-		if (rule2D3state2.get(grid, spaceThatNeedsToBeEmpty) !== 0) {
-			return;
-		}
+	var m = rule2D3state2.trueMod(frame, 3);													// set up offsets & swap coords dep on phase
+	if (m==0) {
+		offx = rule2D3state2.offsetx;
+		offy = rule2D3state2.offsety;
+		offz = rule2D3state2.offsetz;
+		swpx = rule2D3state2.swapx;
+		swpy = rule2D3state2.swapy;
+		swpz = rule2D3state2.swapz;
 	}
-	
-	rotatorState = rule2D3state2.get(grid, rotatorLocation);
-	if (rotatorState === direction)
-		return rule2D3state2.get(grid,
-			rule2D3state2.add(rule2D3state2.vector(
-				deltaFromMeToRotatorLocation.z,
-				0,
-				-deltaFromMeToRotatorLocation.x),
-				rotatorLocation.x,rotatorLocation.y,rotatorLocation.z));
-	if (rotatorState === -direction)
-		return rule2D3state2.get(grid,
-			rule2D3state2.add(rule2D3state2.vector(
-				-deltaFromMeToRotatorLocation.z,
-				0,
-				deltaFromMeToRotatorLocation.x),
-				rotatorLocation.x,rotatorLocation.y,rotatorLocation.z));
-	if (rotatorState === -direction*2)
-		return rule2D3state2.get(grid,
-			rule2D3state2.add(rule2D3state2.vector(
-				-deltaFromMeToRotatorLocation.z,
-				0,
-				-deltaFromMeToRotatorLocation.x),
-				rotatorLocation.x,rotatorLocation.y,rotatorLocation.z));
-	if (rotatorState === -direction*3)
-		return rule2D3state2.get(grid,
-			rule2D3state2.add(rule2D3state2.vector(
-				deltaFromMeToRotatorLocation.z,
-				0,
-				deltaFromMeToRotatorLocation.x),
-				rotatorLocation.x,rotatorLocation.y,rotatorLocation.z));
-};
+	if (m==1) {
+		offx = rule2D3state2.offsetz;
+		offy = rule2D3state2.offsetx;
+		offz = rule2D3state2.offsety;
+		swpx = rule2D3state2.swapz;
+		swpy = rule2D3state2.swapx;
+		swpz = rule2D3state2.swapy;
+	}
+	if (m==2) {
+		offx = rule2D3state2.offsety;
+		offy = rule2D3state2.offsetz;
+		offz = rule2D3state2.offsetx;
+		swpx = rule2D3state2.swapy;
+		swpy = rule2D3state2.swapz;
+		swpz = rule2D3state2.swapx;
+	}
+	return onePlane();
+}
+
+// Knight's move offsets
+rule2D3state2.offsetx = [+2, +1, -1, -2, +2, +1, -1, -2];
+rule2D3state2.offsety = [+1, +2, +2, +1, -1, -2, -2, -1];
+rule2D3state2.offsetz = [0, 0, 0, 0, 0, 0, 0, 0];
+
+// corresponding swap offsets
+rule2D3state2.swapx = [+1, -1, +1, -1, +1, -1, +1, -1];
+rule2D3state2.swapy = [-1, +1, +1, -1, +1, -1, -1, +1];
+rule2D3state2.swapz = [0, 0, 0, 0, 0, 0, 0, 0];
+
+// Javascript ftw
+rule2D3state2.trueMod = function(v, base) {
+    if (v < 0) {
+        return ((v % base) + base) % base;
+    }
+    return v % base;
+}
+
+// and TDD also ftw
+rule2D3state2.TEST=0;
+if(rule2D3state2.TEST) {
+	var grid = new Grid(10, 10, 10);
+	grid.put(0, 0, 0, 1);
+	grid.put(1, 2, 0, 1);
+	// grid.put(-1, 2, 0, 1);
+	console.log("rule2D3state2 returns:", rule2D3state2(grid, 0, 0, 0));
+	console.log("rule2D3state2 returns:", rule2D3state2(grid, -1, 1, 0));
+}
+

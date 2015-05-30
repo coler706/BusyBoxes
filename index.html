@@ -56,7 +56,7 @@
         </div>
         <div id="random_prompt" style="display:none">
           Volume width:<input id="random_prompt_width" class="moodal_default" tabindex=2 type="text" value="4"></input><br/>
-          Cell count:<input id="random_prompt_count"  tabindex=3 type="text" value="16"></input><br/>
+          Fill Percent:<input id="random_prompt_count"  tabindex=3 type="text" value="16"></input><br/>
           Red/Blue ratio:<input id="random_prompt_ratio"  tabindex=4 type="text" value="0.5"></input><br/>
           <br/>
           <button  tabindex=5 onclick="moodal_choice('CANCEL')">CANCEL</button>
@@ -143,7 +143,9 @@
                 <li><a href="?rule=rule3D3state">3D 3-state rule</a></li>
                 <li><a href="?rule=golCKRule">3D 4-state cole rule</a></li>
                 <li><a href="?rule=golCKRule2">3D 7-state cole rule</a></li>
-                <li><a href="?rule=rule2D3state2">2D 5-state cole rule</a></li>
+                <li><a href="?dim=2&rule=rule2D3state2">2D 5-state cole rule</a></li>
+                <li><a href="?dim=2&rule=caveRule&size=100">2D cave rule</a></li>
+                <li><a href="?rule=caveRule3D&size=40">3D cave rule</a></li>
             </ul>
           
             <!-- CONFIGURATION DROP DOWN -->
@@ -233,6 +235,8 @@
         <!-- GOL rules -->
         <script type="text/javascript" src="js/rules/golRule.js"></script>
         <script type="text/javascript" src="js/rules/gol3DRule.js"></script>
+        <script type="text/javascript" src="js/rules/caveRule.js"></script>
+        <script type="text/javascript" src="js/rules/caveRule3D.js"></script>
         
         <!-- Busy boxes rules -->
         <script type="text/javascript" src="js/rules/bbRule.js"></script>
