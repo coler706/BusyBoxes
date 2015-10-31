@@ -1,4 +1,15 @@
 #banner{
-  text-align: center;
-  margin:auto;
+   width:calc( 100% - 210px);
+    text-align:center;
+    height:50px;
+    line-height:30px;
+    margin:5px;
+    font-size:140%;
+    padding:0px;
+    display:absolute;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 100;
+    overflow-y:auto;
 }
