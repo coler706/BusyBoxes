@@ -1,4 +1,120 @@
 //<![CDATA[
+var processSpeed="slow";
+var inToggle = false;
+var inSpeedToggle = false;
+var running = false;
+var calcLoop = null;
+$('#speed-toggle').bootstrapToggle({
+      on: 'Fast',
+      off: 'Slow'
+    });
+$('#run-toggle').change(function() {
+    if (!inToggle) {
+        toggleCalc();
+    }
+});
+$('#speed-toggle').change(function() {
+    
+    if (!inSpeedToggle) {
+        toggleSpeed();
+        
+    }
+});
+
+function toggleCalc() {
+
+    if (!running) {
+        startC();
+    } else {
+        stopC();
+
+    }
+}
+function updateSize(){
+    var w = $("body").width() -2;
+    var h = $("body").height()-2;
+    if($("canvas").width()!=w+"" || $("canvas").height()!=h+""){
+        
+    $("canvas").attr("width", w);
+    $("canvas").attr("height", h);
+    render();
+
+}
+}
+function toggleSpeed() {
+
+    if (processSpeed=="slow") {
+        fastC();
+    } else {
+        slowC();
+
+    }
+}
+function stopC() {
+    inToggle = true;
+    $('#run-toggle').bootstrapToggle('off');
+    if (!running) {
+
+    } else {
+        //window.clearInterval(calcLoop);
+        running = false;
+        setBrushPosition(cursor);
+
+    }
+    inToggle = false;
+}
+
+function fastC() {
+    inSpeedToggle = true;
+    $('#speed-toggle').bootstrapToggle('Fast');
+    if (processSpeed=="slow") {
+        
+        processSpeed="fast";
+        
+
+    } else {
+
+
+    }
+    console.log(processSpeed);
+    inSpeedToggle = false;
+}
+
+function slowC() {
+    inSpeedToggle = true;
+    $('#speed-toggle').bootstrapToggle('Slow');
+    if (processSpeed=="slow") {
+
+    } else {
+        //window.clearInterval(calcLoop);
+        processSpeed="slow";
+        
+
+    }
+    console.log(processSpeed);
+    inSpeedToggle = false;
+}
+
+function startC() {
+    inToggle = true;
+    $('#run-toggle').bootstrapToggle('on');
+    if (!running) {
+        brush.material[ 0 ].color.setHex( 0x00000000 );
+        //calcLoop = window.setInterval(calc, 1);
+        running = true;
+
+    } else {
+
+
+    }
+    inToggle = false;
+}
+function step(){
+    startC();
+    mainLoop(false);
+    stopC();
+    
+}
 var htmlForPath = {};
 var worldListRef = new Firebase('https://lyfecraft.firebaseio.com/');
  var worldListView = worldListRef.limitToLast(100);
@@ -131,15 +247,12 @@ var gUpdateHash2 = "";
 var gInitialHash2 = "";
 var gInitialFrame;
 var encodeString = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-αβξδεφγηιςκλμνοπθρστωχψζ";
-
-var extraChars="Ⓐⓐ⒜AaẠạÅåÄäẢảḀḁẤấẦầẨẩȂȃẪẫẬậẮắẰằẲẳẴẵẶặĀāĄąȀȁǺǻȦȧÁáǞǟǍǎÀàÃãǠǡÂâȺⱥÆæǢǣǼǽⱯꜲꜳꜸꜹꜺꜻⱭ℀⅍℁ªⒷⓑ⒝BbḂḃḄḅḆḇƁɃƀƂƃƄƅℬⒸⓒ⒞CcḈḉĆćĈĉĊċČčÇçƇƈȻȼℂ℃ƆꜾꜿℭ℅℆℄Ⓓⓓ⒟DdḊḋḌḍḎḏḐḑḒḓĎďƊƋƌƉĐđȡǱǲǳǄǅǆȸⅅⅆⒺⓔ⒠EeḔḕḖḗḘḙḚḛḜḝẸẹẺẻẾếẼẽỀềỂểỄễỆệĒēĔĕĖėĘęĚěÈèÉéÊêËëȄȅȨȩȆȇƎⱻɆɇƏǝℰⱸℯ℮ℇƐⒻⓕ⒡FfḞḟƑƒꜰℲⅎꟻℱ℻Ⓖⓖ⒢GgƓḠḡĜĝĞğĠġǤǥǦǧǴℊ⅁ǵĢģⒽⓗ⒣HhḢḣḤḥḦḧḨḩḪḫĤĥȞȟĦħⱧⱨꜦℍǶẖℏℎℋℌꜧⒾⓘ⒤IiḬḭḮḯĲĳÍíÌìÎîÏïĨĩĪīĬĭĮįǏǐıƚỺⅈⅉℹℑℐⒿⓙ⒥JjĴĵɈɉȷⱼǰⓀⓚ⒦KkḰḱḲḳḴḵĶķƘƙꝀꝁꝂꝃꝄꝅǨǩⱩⱪĸⓁⓛ⒧LlḶḷḸḹḺḻḼḽĹĺĻļĽľĿŀŁłỈỉⱠⱡȽꝉꝈⱢǇǈǉỊİịꞁ⅃⅂ȈȉȊȋℓℒⓂⓜ⒨MmḾḿṀṁṂṃꟿꟽⱮƜℳⓃⓝ⒩NnṄṅṆṇṈṉṊṋŃńŅņŇňǸǹÑñȠƞŊŋƝŉǊǋǌȵℕ№Ⓞⓞ⒪OoÖöṎṏṌṍṐṑṒṓȪȫȬȭȮȯȰȱǪǫǬǭỌọỎỏỐốỒồỔổỖỗỘộỚớỜờỞởỠỡỢợƠơŌōŎŏŐőÒòÓóÔôÕõǑǒȌȍȎȏŒœØøǾǿꝊꝎꝏ⍥⍤ℴⓅⓟ⒫℗PpṔṕṖṗƤƥⱣℙǷꟼ℘Ⓠⓠ⒬QqɊɋℚ℺ȹⓇⓡ⒭RrŔŕŖŗŘřṘṙṚṛṜṝṞṟȐȑȒȓɌɍƦꝚꝛⱤ℞ℜℛ℟ℝⓈⓢ⒮SsṠṡṢṣṤṥṦṧṨṩŚśŜŝŞşŠšȘșȿꜱƧƨϨϩẞßẛẜẝ℠Ⓣⓣ⒯TtṪṫṬṭṮṯṰṱŢţŤťŦŧȚțȾⱦƬƮƫƭẗȶ℡™Ⓤⓤ⒰UuṲṳṴṵṶṷṸṹṺṻỦủỤụỨứỪừỬửỮữỰựŨũŪūŬŭŮůŰűǙǚǗǘǛǜŲųǓǔȔȕÛûȖȗÙùÚúÜüƯưɄƲƱⓋⓥ⒱VvṼṽṾṿɅ℣ỼⱱⱴⱽⓌⓦ⒲WwẀẁẂẃẄẅẆẇẈẉŴŵⱲⱳϢϣẘⓍⓧ⒳XxẊẋẌẍℵ×Ⓨⓨ⒴yYẎẏỾỿỲỳỴỵỶỷỸỹŶŷƳƴŸÿÝýɎɏȲȳƔẙ⅄ℽⓏⓩ⒵ZzẐẑẒẓẔẕŹźŻżŽžȤȥⱫⱬƵƶɀℨℤ"
-
-var frame = 0; //
+var frame = 0;
 var cellCount = 0;
 var mode = "wrap";
-var axisMin = -12;
-var axisMax = 11;
-processSpeed = "fast";
+var axisMin = -22;
+var axisMax = 21;
+
 var lastSelectedEl;
 var gLastRefreshedUrl;
 var gLastRefreshedUrl2;
@@ -258,6 +371,7 @@ bugg = 1000;
         POS_EVEN = gRule.Color;
         POS_ODD = gRule.Color;
     }
+    $(".rule-name").html(""+qargs.rule);
     
     if (gRule.EvenColor!=null) {
         POS_EVEN = gRule.EvenColor;
@@ -305,6 +419,7 @@ bugg = 1000;
     
     //Create a scene
     container = document.createElement( 'div' );
+    container.className="container-c";
     // container = document.getElementById('canvas-container');
     // console.log(container);
     document.body.appendChild( container );
@@ -499,7 +614,9 @@ bugg = 1000;
 
 
     //this is the container div we created in the beginning
+
     container.appendChild(renderer.domElement);
+    window.setInterval(updateSize,5);
     
     //standard dom stuff--so that our keyboard controls work
     document.addEventListener( 'keydown', onDocumentKeyDown, false );
@@ -564,7 +681,7 @@ bugg = 1000;
     
     if (qargs.play) {
         setTimeout(function() {
-            if (!IS_RUNNING) {
+            if (!running) {
                 toggleRunning();
             }
         }, 2500);
@@ -619,7 +736,7 @@ function mainLoopSlow() {
 }
 
 function mainLoopScience() {
-    if (IS_RUNNING && processSpeed == "science") {
+    if (running && processSpeed == "science") {
         for (var i=0; i<250; i++) {
             mainLoop(true);                     // no render during main loop for speed
         }
@@ -779,7 +896,7 @@ function mainLoop(noRender) {
     document.getElementById("direction").innerHTML = direction;
     var phase = (frame % 6 + 6) %6;
     
-    if (IS_RUNNING) {
+    if (running) {
         if (direction == "reverse") {
             frame--;
         }
@@ -962,13 +1079,14 @@ function delGrid(xyz) {
 }
 
 function toggleRunning(){
-    if (IS_RUNNING) {
-        IS_RUNNING = false;
+    toggleCalc();
+    if (!running) {
+        //IS_RUNNING = false;
         setBrushPosition(cursor);
     }
     else {
         brush.material[ 0 ].color.setHex( 0x00000000 );
-        IS_RUNNING = true;
+        //IS_RUNNING = true;
     }
 }
 
@@ -1064,7 +1182,7 @@ function onDocumentKeyDown( event ) {
             break;
         case 83:                           // S
             event.preventDefault();
-            if (!IS_RUNNING) {
+            if (!running) {
                 toggleRunning();
             }
             mainLoop();
@@ -1076,7 +1194,7 @@ function onDocumentKeyDown( event ) {
             toggleRunning();
             break;
         case 191:                           // / ?
-            if (IS_RUNNING) {
+            if (running) {
                 toggleRunning();
             }
             event.preventDefault();
@@ -1096,7 +1214,7 @@ function onDocumentKeyDown( event ) {
             break;
         case 70:                            // F
             event.preventDefault();
-            if (!IS_RUNNING) {
+            if (!ru) {
                 toggleRunning();
             }
             fastSlow();
@@ -1139,7 +1257,7 @@ function onDocumentKeyDown( event ) {
             break;
         case 32:                           // SPACE
             event.preventDefault();
-            if (IS_RUNNING) break;
+            if (running) break;
             var obj = getGrid(cursor);
             if (!obj){
                 if (field==1) {
@@ -1681,7 +1799,7 @@ function selectHash(hash, el, size, trail) {
 }
 
 function clearScreen() {
-    IS_RUNNING = false;
+    stopC();
     visual_and_numerical_grid = {};
     mainGrid.clear();
     gThreeUsed = [];			// these guys are trooublesome
@@ -1874,7 +1992,7 @@ function scienceTestInit() {
     gStartHash = lasthash;
     processSpeed = "test";
     //console.log("DEBUG lasthash:", lasthash)
-    IS_RUNNING = true;
+    startC();
     setTimeout(scienceTestLoop, 10);
 }   
 
@@ -1896,7 +2014,7 @@ function scienceTestLoop(){
     }
     else {
         if (DEBUG) console.log("DEBUG trial over. gScienceCounter: ", gScienceCounter, "trial:", gScienceTrial, "hash:", gStartHash)
-        IS_RUNNING = false;
+        stopC();
         processSpeed = "slow";
         var result;
         if (startCellCount != cellCount) {

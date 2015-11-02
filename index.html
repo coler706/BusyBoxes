@@ -27,20 +27,64 @@
       -->
       <title>LyfeCraft</title>
       <meta charset="utf-8">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" ></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
+        <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="css/boot.css">
       <link rel="stylesheet" type="text/css" href="css/application.css"></link>
       <link rel="stylesheet" type="text/css" href="css/sidebar.css"></link>
       <link rel="stylesheet" type="text/css" href="css/banner.css"></link>
       <link rel="stylesheet" type="text/css" href="css/instructionPopUp.css"></link>
       
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" ></script>
+      
       <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-      <script src="js/bootstrap.min.js"></script>
       <script src="js/encdec.js" ></script>
-      <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+      
     </head>
     <audio id="audio" src="click.ogg"></audio>
     <body class="light">
+    <div class="options well">
+            <div class="options-section-title">Options
+            </div>
+            <div class="options-section-sub">Rule
+            </div>
+            <span class="rule-name"></span>
+            
+           
+            <div class="options-section-sub">Speed
+            </div>
+            <input id="speed-toggle" type="checkbox"  onclick="toggleSpeed()">
+            <div class="options-section-sub">Controls
+            </div>
+            <div class="btn-group running-group">
+                <input id="run-toggle" type="checkbox" data-toggle="toggle" onclick="toggleCalc()">
+
+                <button id="clear-button" type="button" class="btn btn-default" onclick="clearGrid()">Clear</button>
+            </div>
+            <button id="up-rule-button" type="button" class="btn btn-default" onclick="updateRules()">Update Rule</button>
+            <button id="step-button" type="button" class="btn btn-default" onclick="step()">Step</button>
+            <button id="random-button" type="button" class="btn btn-default" onclick="randomCells(12, -2, 1)">Random</button>
+            <button id="save-button" type="button" class="btn btn-default" onclick="savePattern()">Save</button>
+            <!@--input id="fileupload" type="file" name="files[]" data-url="server/php/" multiple-->
+            
+            <div class="options-section-sub">Tools
+            </div>
+<div class="options-section-sub">Stats
+            </div>
+            <span class="cell-num"></span>
+            <p>
+            □□■■□□<br/>
+            □□■■□□<br/>
+            □□■■□□<br/>
+            ■□□□□■<br/>
+            ■□□□□■<br/>
+            ■□□□□■
+            </p>
+
+        </div>
       <div id="big_chris_container">
         <div id="moodal_background" style="position:absolute;width:100%;height:100%;background-color:black;z-index:100;opacity:0.2;display:none">
         </div>
@@ -78,11 +122,8 @@
             <button class="bannerButtons btn btn-default" id="fast_forward">
               SLOW DOWN
             </button>
-            <button class="bannerButtons btn btn-default" id="step_through">STEP</button>
             <button class="bannerButtons btn btn-default" onclick="reverseDirection()">DIRECTION</button>
-            <button class="bannerButtons btn btn-default" onclick="randomCells(12, -2, 1)">RANDOM</button>
             <button class="bannerButtons btn btn-default" onclick="toggleTrails()">TRAILS</button>
-            <button class="bannerButtons btn btn-default" onclick="clearGrid()">CLEAR</button>
             <button class="bannerButtons btn btn-default" onclick="update()">UPDATE HASH</button>
             <button class="bannerButtons btn btn-default" onclick="share()">SHARE HASH</button>
             <button class="bannerButtons btn btn-default" onclick="reset()">RESET</button>
