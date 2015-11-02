@@ -196,3 +196,6 @@ canvas {
     padding:0px;
     margin:0px;
 }
+.rule-name {
+  margin-bottom:10px;
+}
